@@ -1,0 +1,110 @@
+variables:
+  TEST: "node@172.16.200.193"
+  FIGHT: "node@172.16.200.191"
+  BACKUP: "node@172.16.200.193"
+
+stages:
+    - config_test
+    - config_fight
+    - build
+    - migrate_test
+    - migrate_fight
+    - deploy_test
+    - deploy_fight
+
+config_test:
+  stage: config_test
+  only:
+    - develop
+  script: 
+    - rm .env
+    - cp testflight.env .env
+  artifacts:
+    paths:
+      - build
+      - .env
+      
+config_fight:
+  stage: config_fight
+  only:
+    - master
+  script: 
+    - rm .env
+    - cp production.env .env
+  artifacts:
+    paths:
+      - build
+      - .env
+
+build: 
+  stage: build
+  script: 
+    - yarn install
+    - yarn ui
+    - npx webpack --config ./FE/config/client.js --mode production
+    - npx typescript --build ./BE
+    - npx pkg . --options expose-gc --out-path ./build/
+    - rm -rf ./BE/dist
+  artifacts:
+    paths:
+      - ./build
+      - .env
+      - ./FE/dist/epd.mod.js
+
+migrate_test:
+  stage: migrate_test
+  only:
+    - develop
+  script:
+    - export $(grep -v '^#' .env | xargs)
+    # pgrep -f '$SSH_TUNNEL_TEST' &>/dev/null || $SSH_TUNNEL_TEST
+    - yarn migrate
+  artifacts:
+    paths:
+      - ./build/
+      - .env
+      - ./FE/dist/
+
+migrate_fight:
+  stage: migrate_fight
+  when: manual
+  only:
+    - master
+  script:
+    - export $(grep -v '^#' .env | xargs)
+    # pgrep -f '$SSH_TUNNEL_FIGHT' &>/dev/null || $SSH_TUNNEL_FIGHT
+    - yarn migrate
+  artifacts:
+    paths:
+      - ./build/
+      - .env
+      - ./FE/dist/
+
+deploy_test:
+  stage: deploy_test
+  only:
+    - develop
+  script:
+    - ssh $TEST 'pm2 stop epd-app-linux'
+    - rsync -avv --del -compress-level=9 -e "ssh -p 22" build/epd-app-linux  $TEST:/opt/node-apps/epd/build/epd-app-linux
+    - rsync -avv --del -compress-level=9 -e "ssh -p 22" package.json  $TEST:/opt/node-apps/epd/package.json
+    - rsync -avv --del -compress-level=9 -e "ssh -p 22" .env  $TEST:/opt/node-apps/epd/.env
+    - rsync -avv --del -compress-level=9 -e "ssh -p 22" ./FE/dist/epd.mod.js $TEST:/opt/node-apps/connect/build/modules/epd.mod.js
+    - ssh $TEST 'pm2 start epd-app-linux'
+  environment:
+    name: Test
+
+deploy_fight:
+  stage: deploy_fight
+  when: manual
+  only:
+    - master
+  script:
+    - ssh $FIGHT 'pm2 stop epd-app-linux'
+    - rsync -avv --del -compress-level=9 -e "ssh -p 22" build/epd-app-linux  $FIGHT:/opt/node-apps/epd/build/epd-app-linux
+    - rsync -avv --del -compress-level=9 -e "ssh -p 22" package.json  $FIGHT:/opt/node-apps/epd/package.json
+    - rsync -avv --del -compress-level=9 -e "ssh -p 22" .env  $FIGHT:/opt/node-apps/epd/.env
+    - rsync -avv --del -compress-level=9 -e "ssh -p 22" ./FE/dist/epd.mod.js $FIGHT:/opt/node-apps/connect/build/modules/epd.mod.js
+    - ssh $FIGHT 'pm2 start epd-app-linux'
+  environment:
+    name: Production

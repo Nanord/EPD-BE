@@ -1,0 +1,26 @@
+{
+    "private": true,
+    "author": "Ilya Trikoz",
+    "scripts": {
+        "start": "node ./BE/dist/index.js",
+        "start2": "ts-node %NODE_DEBUG_OPTION% ./BE/src/index.ts --arguments",
+        "build-BE": "npx typescript --build ./BE",
+        "fork": "pm2 start ./build/epd-app-linux",
+        "exportenv": "export $(grep -v '^#' .env | xargs)",
+        "cluster": "NODE_ENV=production pm2 start ./build/epd-app-linux -i MAX",
+        "clear": "rm -rf ./node_modules && rm -rf ./BE/node_modules "
+    },
+    "pkg": {
+        "assets": [
+            "BE/queries/*"
+        ]
+    },
+    "name": "epd-app",
+    "bin": "BE/dist/index.js",
+    "workspaces": [
+        "BE"
+    ],
+    "dependencies": {
+        "webpack-cli": "^3.1.2"
+    }
+}
