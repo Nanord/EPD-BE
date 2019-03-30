@@ -42,7 +42,7 @@ class Socket extends WS {
                         Logger.warning("Invalid subsctibe" + message + error)
                     }
                     break;
-                case '123':
+                case 'api':
                     Logger.log(message.type);
                     connection.send(JSON.stringify({name:"f", f:"name"}))
                     break;
@@ -50,7 +50,7 @@ class Socket extends WS {
                     Logger.warning("Incorrect socket method called " + message.method);
             }
         } catch (error) {
-            Logger.error(error);
+            Logger.error(error.message + "\n" + error.stack);
         }
     }
 

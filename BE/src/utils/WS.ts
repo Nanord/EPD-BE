@@ -33,13 +33,13 @@ class WS {
                 });
 
             } catch (error) {
-                console.log(error);
+                console.log(error + "\n" + error.stack);
             }
         });
     }
 
     hasClientsConnected() {
-        return this.SOCKETS.length ? true : false;
+        return !!this.SOCKETS.length;
     }
 
     onMessage(data, connection) {

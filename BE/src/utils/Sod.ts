@@ -58,7 +58,7 @@ class SOD {
 
         return res.data.contents;
     }
-};
+}
 
 
 export default SOD.getInstance;

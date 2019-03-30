@@ -5,12 +5,14 @@
   "main": "index",
   "scripts": {
     "start": "node ./dist/index.js",
-    "start2": "ts-node %NODE_DEBUG_OPTION% ./src/index.ts --arguments",
+    "start2": "ts-node ./src/index.ts --arguments",
     "build-BE": "npx typescript --build"
   },
   "author": "Borisov Alexandr",
   "license": "ISC",
   "dependencies": {
+    "nodemon": "^1.18.10",
+    "redis": "^2.8.0",
     "@types/compression": "^0.0.36",
     "@types/js-yaml": "^3.11.2",
     "@types/moment": "^2.13.0",

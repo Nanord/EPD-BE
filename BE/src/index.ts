@@ -8,6 +8,10 @@ import Socket from './api/Socket';
 import compression, { filter } from 'compression';
 import express from 'express';
 import bodyParser from 'body-parser';
+import {router} from "websocket";
+import path from 'path'
+import Logger from "./utils/Logger";
+import Redis from "./utils/Redis";
 
 let currentRoot = process.execPath;
 
@@ -33,17 +37,34 @@ app.use((req, res, next) => {
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 app.use(compression());
+//Удалить в будующем
+app.use(express.static(path.join(__dirname, "public")));
+
+app.use(function(req, res, next){
+    res.status(404);
+    Logger.log('Not found URL: ' + req.url);
+    res.send({ error: 'Not found' });
+    return;
+});
+
+app.use(function(err, req, res, next){
+    res.status(err.status || 500);
+    Logger.error('Internal error(' + res.status + ") " + err.message);
+    res.send({ error: err.message });
+    return;
+});
+///
 
 /**
  * Внешний API
  */
 app.post("/api/:method", (req, res) => {
+    console.log("123");
     res.set('Content-Type', 'application/json; charset=utf-8');
 
     let result = { ok: false, code: 1000, message: "Sorry but no..." };
 
     const Method = Methods[req.params.method] as Service;
-
     if (!Method) {
         res.status(200).send(result);
         return;
@@ -57,9 +78,30 @@ app.post("/api/:method", (req, res) => {
     //     result.message = "Wrong header"
     //     res.status(200).send(result);
     // }
-})
+});
 
-app.all("/ok", (req, res) => res.send("OK"));
+
+app.get("/test", (req, res) => {
+    res.sendFile(__dirname + "/test.html");
+});
+
+app.post("/test", (req, res) => {
+    console.log("test");
+    res.set('Content-Type', 'application/json; charset=utf-8');
+    res.status(200)
+    let redis_res = Redis.get("fuck");
+});
+
+app.all("/ok", (req, res) => {
+    console.log("OK");
+    res.send("OK")
+});
+
+
+//Connection DB
+let ex = Redis.setex('fuck', 3600, JSON.stringify({fuck:"fucking"}));
+
+
 
 const server = require('http').Server(app)
 
