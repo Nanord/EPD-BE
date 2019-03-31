@@ -37,29 +37,30 @@ app.use((req, res, next) => {
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 app.use(compression());
-//Удалить в будующем
+// Удалить в будующем
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use(function(req, res, next){
-    res.status(404);
-    Logger.log('Not found URL: ' + req.url);
-    res.send({ error: 'Not found' });
-    return;
-});
+// app.use(function(req, res, next){
+//     res.status(404);
+//     Logger.log('Not found URL: ' + req.url);
+//     res.status(404);
+//     res.send({ error: 'Not found' });
+//     return;
+// });
 
-app.use(function(err, req, res, next){
-    res.status(err.status || 500);
-    Logger.error('Internal error(' + res.status + ") " + err.message);
-    res.send({ error: err.message });
-    return;
-});
+// app.use(function(err, req, res, next){
+//     res.status(err.status || 500);
+//     Logger.error('Internal error(' + res.status + ") " + err.message);
+//     res.send({ error: err.message });
+//     return;
+// });
 ///
 
 /**
  * Внешний API
  */
 app.post("/api/:method", (req, res) => {
-    console.log("123");
+    Logger.log("/api/" + req.params.method);
     res.set('Content-Type', 'application/json; charset=utf-8');
 
     let result = { ok: false, code: 1000, message: "Sorry but no..." };
@@ -89,19 +90,29 @@ app.post("/test", (req, res) => {
     console.log("test");
     res.set('Content-Type', 'application/json; charset=utf-8');
     res.status(200)
-    let redis_res = Redis.get("fuck");
+    res.send("ХУЙ");
 });
 
 app.all("/ok", (req, res) => {
+    let redis_res = Redis.get("fuck");
+
     console.log("OK");
-    res.send("OK")
+
+    // @ts-ignore
+    redis_res
+        .then(
+            result => {
+                res.status(200);
+                Logger.log("/OK res " + result);
+                res.send(JSON.parse(result));
+            },
+            error => {
+                res.status(500);
+                Logger.log("/OK err " + error);
+                res.send(JSON.parse(error));
+            }
+        );
 });
-
-
-//Connection DB
-let ex = Redis.setex('fuck', 3600, JSON.stringify({fuck:"fucking"}));
-
-
 
 const server = require('http').Server(app)
 

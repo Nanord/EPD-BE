@@ -1,64 +1,98 @@
 import axios from 'axios';
+import Logger from '../utils/Logger';
 
-class SOD {
-    private endpoint: string;
-    private timeout: number;
+class Sod {
+    static instance: Sod;
 
-    constructor(endpoint: string, timeout: number) {
-        this.endpoint = endpoint;
-        this.timeout = timeout;
-    }
-
-    static instance: SOD;
-    static getInstance(endpoint: string, timeout: number = 90000) {
-        if (!this.instance) {
-            this.instance = new SOD(endpoint, timeout);
+    static getInstance() {
+        if (Sod.instance == null) {
+            Sod.instance = new Sod();
         }
-        return this.instance;
+        return Sod.instance;
     }
+
+    constructor() { }
 
     private jsonEncode(s) {
-        let t = "";
+        let ret = "";
         for (let i = 0; i < s.length; i++) {
-            let c;
+            let chr;
             if (s[i].match(/[^\x00-\x7F]/)) {
-                c = "\\u" + ("000" + s[i].charCodeAt(0).toString(16)).substr(-4);
+                chr = "\\u" + ("000" + s[i].charCodeAt(0).toString(16)).substr(-4);
             } else {
-                c = s[i];
+                chr = s[i];
             }
-            t = t + c;
+            ret = ret + chr;
         }
-        return t;
+        return ret;
     }
 
-    public async query(name: string, org: string | number = -1, params: object = {}, out_params: object = {}, needUnicode: boolean = false) {
 
-        let json = JSON.stringify({ name, org, params, out_params });
-
+    /**
+     * Выполнить запрос в СОД
+     * @param {Object} params
+     * @param {Object} out_params
+     */
+    public performQuery(params = {}, out_params = {}, needUnicode = false): Promise<any> {
+        const name = "хз";
+        const org = -1;
+        if (typeof params === 'undefined' || typeof name === 'undefined') {
+            throw ("Параметры функции должны быть опеределены");
+        }
+        const requestObject = { name, org, params, out_params };
+        let json = JSON.stringify(requestObject);
         if (needUnicode) {
             json = this.jsonEncode(json);
         }
-        const res = await axios({
-            method: 'POST',
-            url: this.endpoint,
-            timeout: this.timeout,
-            data: {
-                provider: "sodInternal",
-                json
-            },
-            headers: { 'Content-Type': 'application/json; charset=utf-8' }
+
+        //@ts-ignore
+        //const url = `http://${process.env.SMORODINA_SOD_SERVER_HOST}:${process.env.SMORODINA_SOD_SERVER_PORT}/${process.env.SMORODINA_SOD_SERVER_PATH}`;
+        const url = `http://172.16.200.191:8077/SOD`;
+
+        return new Promise((resolve, reject) => {
+            axios({
+                method: 'POST',
+                url,
+                timeout: 90000,
+                data: {
+                    provider: "sodInternal",
+                    json
+                },
+                headers: { 'Content-Type': 'application/json; charset=utf-8' }
+            }).then(res => {
+                if (!res.data) {
+                    reject({
+                        message: "Ошибка работы с СОД",
+                        err: 'Отсутствует информация!'
+                    });
+                    return;
+                }
+                if (res.data.result.code == "1004") {
+                    resolve(res.data.contents as any[]);
+                } else {
+                    Logger.error(`SOD !! (${res.data.result.code}) ${res.data.result.message}`);
+                    reject({
+                        err: res.data.result.message,
+                        message: "Ошибка работы с СОД"
+                    });
+                }
+            })
+                .catch((error) => {
+                    //@ts-ignore
+                    if (error.message) {
+                        Logger.error(`SOD !! ${error.message}`);
+                    }
+                    else {
+                        Logger.error(`SOD !! ${error.toString()}`);
+                    }
+                    reject({
+                        err: error.message,
+                        message: "Ошибка работы СОД"
+                    });
+                });
         });
-
-        if (!res.data) {
-            throw new Error(`Ошибка работы с СОД: NO DATA`);
-        }
-        if (res.data.result.code != "1004") {
-            throw new Error(`[${res.data.result.code}] ${res.data.result.message}`);
-        }
-
-        return res.data.contents;
     }
+
 }
 
-
-export default SOD.getInstance;
+export default Sod.getInstance();

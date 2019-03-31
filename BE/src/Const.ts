@@ -1,5 +1,6 @@
 class Const{
 
+    static DEBUG = true;
 	//BE general config
     static SMORODINA_ALLOW_ORIGIN: string = "*";
 

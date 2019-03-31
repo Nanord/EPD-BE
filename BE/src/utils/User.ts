@@ -3,6 +3,7 @@ import axios from 'axios';
 import Const from "../Const";
 
 namespace User {
+    //РЕДИС
     const cache = new NodeCache({ stdTTL: 100, checkperiod: 120 });
 
     export async function check(session: string) {
@@ -14,6 +15,7 @@ namespace User {
         if (Const.SMORODINA_MOD_EPD_FAKEID === "true") {
             return require('../../../__debugUserInfo').default;
         }
+        //Реализовать через REDIS!
         const user = await cache.get(session);
         if (user) {
             // FUCK
@@ -31,6 +33,7 @@ namespace User {
                     ...data.result,
                     isSuperuser: data.result.login === "superuser"
                 };
+                //РЕДИС
                 cache.set(data.result.session, user);
                 return user;
             }

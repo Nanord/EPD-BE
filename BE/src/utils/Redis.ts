@@ -1,5 +1,8 @@
 import redis, { RedisClient } from 'redis';
 import Logger from './Logger';
+import {error} from "util";
+import {rejects} from "assert";
+import Const from "../Const";
 
 class Redis {
     static instance: Redis;
@@ -25,7 +28,6 @@ class Redis {
 
     constructor() {
         this.client = redis.createClient({ port: this.port, host: this.host });
-        this.client.auth("rotNA512");
         Logger.log("Connection to Redis successful!");
         this.client.on("error", (error) => {
             Logger.error("Cannot connect to redis server" + error.message);
@@ -51,17 +53,17 @@ class Redis {
     }
 
     promisify(method: Function, args: any): Promise<any> {
-        console.log("я тут");
+        let arg = Object.values(args);
         return new Promise<any>((resolve, reject) => {
-            method.apply(this.client, [args, (err, data) => {
+            method.apply(this.client, [...arg, (err, data) => {
                 if (!err) {
-                    console.log("Успех");
                     return resolve(data);
                 }
-                console.log("Неудача");
                 return reject(err.message);
             }]);
-        })
+        }).catch(err=> {
+            Logger.error("Redis error promise " + err.toString())
+        });
     }
 
     /**
@@ -106,6 +108,15 @@ class Redis {
     public delete(key: string) {
         return this.promisify(this.client.DEL, arguments);
     }
+
+    public sadd(key: string, ttl: number, value: string) {
+        return this.promisify(this.client.SADD, arguments);
+    }
+
+    public sismember(valu: string) {
+        return this.promisify(this.client.SISMEMBER, arguments);
+    }
+
 }
 
 export default Redis.getInstance();

@@ -1,4 +1,6 @@
 import Errors from './Errors';
+import User from "../utils/User";
+import Logger from "../utils/Logger";
 interface Service {
     on: Function
     name: string
@@ -15,8 +17,8 @@ class Service {
         this.on = opt.on;
     }
 
-    name = "Unknown";
-    description = "";
+    name = "Unknown"
+    description = ""
 
     executor(req: any, res: any) {
         /**
@@ -70,7 +72,7 @@ class Service {
      * Отдельная функция для выполнения сервиса
      */
     exec(params: any) {
-        return new Promise((SendSuccess, SendError) => {
+        return new Promise<any>((SendSuccess, SendError) => {
             this.on.bind(this)(params, SendSuccess, (code: number, message?: string) => {
                 const msg = message || (Errors[code] ? Errors[code].message : "Ошибка");
                 SendError({
