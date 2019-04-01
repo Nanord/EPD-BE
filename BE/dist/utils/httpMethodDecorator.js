@@ -9,3 +9,4 @@ function default_1(value, f) {
     };
 }
 exports.default = default_1;
+//# sourceMappingURL=httpMethodDecorator.js.map

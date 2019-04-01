@@ -17,6 +17,9 @@ var Socket_1 = __importDefault(require("./api/Socket"));
 var compression_1 = __importDefault(require("compression"));
 var express_1 = __importDefault(require("express"));
 var body_parser_1 = __importDefault(require("body-parser"));
+var path_1 = __importDefault(require("path"));
+var Logger_1 = __importDefault(require("./utils/Logger"));
+var Redis_1 = __importDefault(require("./utils/Redis"));
 var currentRoot = process.execPath;
 if (!__dirname.match("/snapshot/")) {
     currentRoot = __dirname;
@@ -36,10 +39,27 @@ app.use(function (req, res, next) {
 app.use(body_parser_1.default.json({ limit: '50mb' }));
 app.use(body_parser_1.default.urlencoded({ extended: true, limit: '50mb' }));
 app.use(compression_1.default());
+// Удалить в будующем
+app.use(express_1.default.static(path_1.default.join(__dirname, "public")));
+// app.use(function(req, res, next){
+//     res.status(404);
+//     Logger.log('Not found URL: ' + req.url);
+//     res.status(404);
+//     res.send({ error: 'Not found' });
+//     return;
+// });
+// app.use(function(err, req, res, next){
+//     res.status(err.status || 500);
+//     Logger.error('Internal error(' + res.status + ") " + err.message);
+//     res.send({ error: err.message });
+//     return;
+// });
+///
 /**
  * Внешний API
  */
 app.post("/api/:method", function (req, res) {
+    Logger_1.default.log("/api/" + req.params.method);
     res.set('Content-Type', 'application/json; charset=utf-8');
     var result = { ok: false, code: 1000, message: "Sorry but no..." };
     var Method = Methods[req.params.method];
@@ -55,7 +75,30 @@ app.post("/api/:method", function (req, res) {
     //     res.status(200).send(result);
     // }
 });
-app.all("/ok", function (req, res) { return res.send("OK"); });
+app.get("/test", function (req, res) {
+    res.sendFile(__dirname + "/test.html");
+});
+app.post("/test", function (req, res) {
+    console.log("test");
+    res.set('Content-Type', 'application/json; charset=utf-8');
+    res.status(200);
+    res.send("ХУЙ");
+});
+app.all("/ok", function (req, res) {
+    var redis_res = Redis_1.default.get("fuck");
+    console.log("OK");
+    // @ts-ignore
+    redis_res
+        .then(function (result) {
+        res.status(200);
+        Logger_1.default.log("/OK res " + result);
+        res.send(JSON.parse(result));
+    }, function (error) {
+        res.status(500);
+        Logger_1.default.log("/OK err " + error);
+        res.send(JSON.parse(error));
+    });
+});
 var server = require('http').Server(app);
 server.listen(Const_1.default.SMORODINA_MOD_EPD_PORT);
 /**
@@ -67,3 +110,4 @@ Socket_1.default.start(server);
  * Приветсвие
  */
 console.log("LISTEN " + Const_1.default.SMORODINA_MOD_EPD_PORT + " ");
+//# sourceMappingURL=index.js.map

@@ -6,3 +6,4 @@ exports.default = {
     1000: { code: 1000, message: "Сессия не действительна" },
     1001: { code: 1001, message: "Недостаточно привилегий, обратитесь к администратору ресурса" },
 };
+//# sourceMappingURL=Errors.js.map

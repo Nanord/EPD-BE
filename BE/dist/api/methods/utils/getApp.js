@@ -58,3 +58,4 @@ function default_1(params) {
     });
 }
 exports.default = default_1;
+//# sourceMappingURL=getApp.js.map

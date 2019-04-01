@@ -52,7 +52,8 @@ export default new Service({
                             name: "string2",
                             summ: "number2",
                             fcount: "number2",
-                        }]
+                        }
+                    ]
                 };
                 res = JSON.stringify(res);
                 Redis.setex('methods:2', 3600, JSON.stringify(res));

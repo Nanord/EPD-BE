@@ -80,3 +80,4 @@ exports.default = (function (queryName, variables) { return __awaiter(_this, voi
         }
     });
 }); });
+//# sourceMappingURL=DataBase.js.map

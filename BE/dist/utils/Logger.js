@@ -113,6 +113,8 @@ var Logger = /** @class */ (function () {
                     case 2:
                         res = _d.sent();
                         Logger.error("Error " + res.id + ": " + errorText);
+                        // FUCK
+                        console.log("Что то отправляю админам");
                         _b = (_a = Socket_1.default).sendToAdmin;
                         _c = {
                             name: "NewError"
@@ -136,3 +138,4 @@ var Logger = /** @class */ (function () {
     return Logger;
 }());
 exports.default = Logger;
+//# sourceMappingURL=Logger.js.map

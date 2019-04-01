@@ -8,3 +8,4 @@ function default_1(params, checkValues) {
     return true;
 }
 exports.default = default_1;
+//# sourceMappingURL=checkForVoid.js.map

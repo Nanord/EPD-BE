@@ -16,3 +16,4 @@ exports.splitPhones = function (phones) {
     });
     return phonesArray;
 };
+//# sourceMappingURL=matchPhone.js.map

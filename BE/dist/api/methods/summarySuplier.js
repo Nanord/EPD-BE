@@ -73,3 +73,4 @@ exports.default = new Service_1.default({
         });
     }); }
 });
+//# sourceMappingURL=summarySuplier.js.map

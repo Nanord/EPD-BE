@@ -72,21 +72,29 @@ var WS = /** @class */ (function () {
                 }); });
             }
             catch (error) {
-                console.log(error);
+                console.log(error + "\n" + error.stack);
             }
         });
     };
     WS.prototype.hasClientsConnected = function () {
-        return this.SOCKETS.length ? true : false;
+        return !!this.SOCKETS.length;
     };
     WS.prototype.onMessage = function (data, connection) {
         //on data recieved
+        console.log("WS.onMessage: " + data.toString());
     };
     WS.prototype.attachUser = function (connection, user) {
         //@ts-ignore
         connection.user = user;
     };
     WS.prototype.sendMessageByMatch = function (message, matcher) {
+        //FUCK
+        console.log("точно отправил " + message + "\n\t" + this.SOCKETS.length);
+        this.SOCKETS
+            .forEach(function (socket) {
+            console.log("Адресс " + socket.remoteAddress + "\n");
+        });
+        //FUCK
         if (this.hasClientsConnected()) {
             this.SOCKETS
                 //@ts-ignore
@@ -94,19 +102,23 @@ var WS = /** @class */ (function () {
                 .map(function (socket) { return socket.send(message); });
         }
     };
-    WS.prototype.sendBySession = function (data, session) {
-        this.sendMessageByMatch(JSON.stringify(data), function (user) { return user.session === session; });
+    WS.prototype.sendBySession = function (name, data, session) {
+        this.sendMessageByMatch(JSON.stringify({ name: name, data: data }), function (user) { return user.session === session; });
     };
-    WS.prototype.sendByUserId = function (data, userId) {
+    WS.prototype.sendByUserId = function (name, data, userId) {
         this.sendMessageByMatch(JSON.stringify(data), function (user) { return user.id === userId; });
     };
-    WS.prototype.sendByUserRoles = function (data, userRoles) {
+    WS.prototype.sendByUserRoles = function (name, data, userRoles) {
         this.sendMessageByMatch(JSON.stringify(data), function (user) {
             return user.roles.findIndex(function (socketRole) {
                 return userRoles.findIndex(function (role) { return role === socketRole.name; }) >= 0;
             }) >= 0;
         });
     };
+    WS.prototype.broadcast = function (name, data) {
+        this.SOCKETS.forEach(function (socket) { return socket.send(JSON.stringify({ name: name, data: data })); });
+    };
     return WS;
 }());
 exports.default = WS;
+//# sourceMappingURL=WS.js.map

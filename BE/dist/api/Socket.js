@@ -67,7 +67,7 @@ var Socket = /** @class */ (function (_super) {
     };
     Socket.prototype.onMessage = function (data, connection) {
         return __awaiter(this, void 0, void 0, function () {
-            var message, _a, user, error_1, error_2;
+            var message, _a, user, error_1, name_1, data_1, error_2;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -77,14 +77,15 @@ var Socket = /** @class */ (function (_super) {
                         }
                         _b.label = 1;
                     case 1:
-                        _b.trys.push([1, 9, , 10]);
+                        _b.trys.push([1, 10, , 11]);
                         message = JSON.parse(data.utf8Data);
                         _a = message.method;
                         switch (_a) {
                             case 'login': return [3 /*break*/, 2];
                             case 'subscribe': return [3 /*break*/, 6];
+                            case 'api': return [3 /*break*/, 7];
                         }
-                        return [3 /*break*/, 7];
+                        return [3 /*break*/, 8];
                     case 2:
                         _b.trys.push([2, 4, , 5]);
                         return [4 /*yield*/, User_1.default.check(message.session)];
@@ -93,23 +94,37 @@ var Socket = /** @class */ (function (_super) {
                         /**
                          * Записываем пользователя в сокет
                          */
+                        Logger_1.default.log("Connected user:" + message.session);
                         this.attachUser(connection, user);
                         return [3 /*break*/, 5];
                     case 4:
                         error_1 = _b.sent();
                         Logger_1.default.warning("Invalid session on socket login " + message.session);
                         return [3 /*break*/, 5];
-                    case 5: return [3 /*break*/, 8];
-                    case 6: return [3 /*break*/, 8];
+                    case 5: return [3 /*break*/, 9];
+                    case 6:
+                        try {
+                            name_1 = "fuck you";
+                            data_1 = { fuck: "you" };
+                            connection.send(JSON.stringify({ name: name_1, data: data_1 }));
+                        }
+                        catch (error) {
+                            Logger_1.default.warning("Invalid subsctibe" + message + error);
+                        }
+                        return [3 /*break*/, 9];
                     case 7:
+                        Logger_1.default.log(message.type);
+                        connection.send(JSON.stringify({ name: "f", f: "name" }));
+                        return [3 /*break*/, 9];
+                    case 8:
                         Logger_1.default.warning("Incorrect socket method called " + message.method);
-                        _b.label = 8;
-                    case 8: return [3 /*break*/, 10];
-                    case 9:
+                        _b.label = 9;
+                    case 9: return [3 /*break*/, 11];
+                    case 10:
                         error_2 = _b.sent();
-                        Logger_1.default.error(error_2);
-                        return [3 /*break*/, 10];
-                    case 10: return [2 /*return*/];
+                        Logger_1.default.error(error_2.message + "\n" + error_2.stack);
+                        return [3 /*break*/, 11];
+                    case 11: return [2 /*return*/];
                 }
             });
         });
@@ -125,3 +140,4 @@ var Socket = /** @class */ (function (_super) {
     return Socket;
 }(WS_1.default));
 exports.default = Socket.getInstance();
+//# sourceMappingURL=Socket.js.map

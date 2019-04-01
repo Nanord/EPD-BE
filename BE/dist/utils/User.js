@@ -54,6 +54,7 @@ var axios_1 = __importDefault(require("axios"));
 var Const_1 = __importDefault(require("../Const"));
 var User;
 (function (User) {
+    //РЕДИС
     var cache = new node_cache_promise_1.default({ stdTTL: 100, checkperiod: 120 });
     function check(session) {
         return __awaiter(this, void 0, void 0, function () {
@@ -71,15 +72,20 @@ var User;
                     case 1:
                         user = _a.sent();
                         if (user) {
+                            // FUCK
+                            console.log("4");
                             return [2 /*return*/, user];
                         }
                         return [4 /*yield*/, axios_1.default.get("http://" + Const_1.default.SMORODINA_ACCESS_SERVER_HOST + ":" + Const_1.default.SMORODINA_ACCESS_SERVER_PORT + "/check?session=" + session)];
                     case 2:
                         response = _a.sent();
+                        // FUCK
+                        console.log("SMORODINA_ACCESS_SERVER_HOST: " + response + "\n" + "\t" + response.data);
                         data = response.data;
                         if (typeof data === "object") {
                             if (data.ok == true) {
                                 user_1 = __assign({}, data.result, { isSuperuser: data.result.login === "superuser" });
+                                //РЕДИС
                                 cache.set(data.result.session, user_1);
                                 return [2 /*return*/, user_1];
                             }
@@ -93,3 +99,4 @@ var User;
     User.check = check;
 })(User || (User = {}));
 exports.default = User;
+//# sourceMappingURL=User.js.map

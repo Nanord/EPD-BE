@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Const = /** @class */ (function () {
     function Const() {
     }
+    Const.DEBUG = true;
     //BE general config
     Const.SMORODINA_ALLOW_ORIGIN = "*";
     //BE config
@@ -31,3 +32,4 @@ var Const = /** @class */ (function () {
     return Const;
 }());
 exports.default = Const;
+//# sourceMappingURL=Const.js.map

@@ -41,7 +41,6 @@ var Service = /** @class */ (function () {
             if (result === void 0) { result = null; }
             this({ ok: true, code: 0, message: "OK", result: result });
         }
-        ;
         /**
          * Вернуть ошибку
          */
@@ -77,3 +76,4 @@ var Service = /** @class */ (function () {
     return Service;
 }());
 exports.default = Service;
+//# sourceMappingURL=Service.js.map

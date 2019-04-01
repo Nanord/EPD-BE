@@ -1,6 +1,6 @@
 {
     "private": true,
-    "author": "Ilya Trikoz",
+    "author": "Borisov Alexandr",
     "scripts": {
         "start": "node ./BE/dist/index.js",
         "start2": "ts-node %NODE_DEBUG_OPTION% ./BE/src/index.ts --arguments",
