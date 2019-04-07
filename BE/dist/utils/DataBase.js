@@ -41,17 +41,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var graphql_request_1 = require("graphql-request");
 var fs = __importStar(require("fs"));
 var path = __importStar(require("path"));
-var Const_1 = __importDefault(require("../Const"));
 var queryCache = {};
-var endpoint = "http://" + Const_1.default.SMORODINA_MOD_EPD_PRISMA_HOST + ":" + Const_1.default.SMORODINA_MOD_EPD_PRISMA_PORT;
+var endpoint = "http://" + process.env.SMORODINA_MOD_EPD_PRISMA_HOST + ":" + process.env.SMORODINA_MOD_EPD_PRISMA_PORT;
 /**
  * Выполнение GraphQL квери
  */

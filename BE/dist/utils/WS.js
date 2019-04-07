@@ -118,6 +118,10 @@ var WS = /** @class */ (function () {
     WS.prototype.broadcast = function (name, data) {
         this.SOCKETS.forEach(function (socket) { return socket.send(JSON.stringify({ name: name, data: data })); });
     };
+    WS.prototype.stop = function () {
+        this.wsServer.closeAllConnections();
+        this.wsServer.shutDown();
+    };
     return WS;
 }());
 exports.default = WS;

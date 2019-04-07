@@ -51,7 +51,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var node_cache_promise_1 = __importDefault(require("node-cache-promise"));
 var axios_1 = __importDefault(require("axios"));
-var Const_1 = __importDefault(require("../Const"));
 var User;
 (function (User) {
     //РЕДИС
@@ -65,7 +64,7 @@ var User;
                         if (!session) {
                             throw new Error("Incorrect Session");
                         }
-                        if (Const_1.default.SMORODINA_MOD_EPD_FAKEID === "true") {
+                        if (process.env.SMORODINA_MOD_EPD_FAKEID === "true") {
                             return [2 /*return*/, require('../../../__debugUserInfo').default];
                         }
                         return [4 /*yield*/, cache.get(session)];
@@ -76,7 +75,7 @@ var User;
                             console.log("4");
                             return [2 /*return*/, user];
                         }
-                        return [4 /*yield*/, axios_1.default.get("http://" + Const_1.default.SMORODINA_ACCESS_SERVER_HOST + ":" + Const_1.default.SMORODINA_ACCESS_SERVER_PORT + "/check?session=" + session)];
+                        return [4 /*yield*/, axios_1.default.get("http://" + process.env.SMORODINA_ACCESS_SERVER_HOST + ":" + process.env.SMORODINA_ACCESS_SERVER_PORT + "/check?session=" + session)];
                     case 2:
                         response = _a.sent();
                         // FUCK

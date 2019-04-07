@@ -3,7 +3,6 @@ import Logger from "../../utils/Logger";
 import User from "../../utils/User";
 import Sod from "../../utils/Sod";
 import Redis from "../../utils/Redis";
-import Const from "../../Const";
 
 
 export default new Service({
@@ -11,26 +10,18 @@ export default new Service({
     description: "Список получателей",
     on: async function (request, SendSuccess, SendError) {
         try {
-            if(Const.DEBUG) {
-                Logger.log("Method:ProviderList, user " + request.session)
-            }
-            if(!request.session) {
-                return SendError(1000);
-            }
+            Logger.log("Method: " + this.name + ", user " + request.session);
             let user;
-            user = Redis.get(request.session);
-            if(!user) {
-                try {
-                    user = await User.check(request.session);
-                } catch (error) {
-                    // @ts-ignore
-                    return SendError(1000, error.message);
-                }
-                if (!user.roles.find(role => role.name === "LK_ADMIN") && !user.isSuperuser) {
-                    return SendError(1001);
-                }
+            try {
+                user = await User.check(request.session);
+                Logger.log("user checked");
+            } catch (error) {
+                Logger.log("user unchecked");
+                return SendError(1000, error.message);
             }
-
+            if (!user.roles.find(role => role.name === "LK_ADMIN") && !user.isSuperuser) {
+                return SendError(1001);
+            }
             // @ts-ignore
             // const res = await Sod.performQuery({
             //     reqtype: request.reqtype || null,
@@ -61,7 +52,7 @@ export default new Service({
                 res = JSON.stringify(res);
                 Redis.setex('methods:1', 3600, JSON.stringify(res));
             }
-            if(Const.DEBUG) {
+            if(process.env.DEBUG) {
                 Logger.log("Method:ProviderList, user " + request.session)
             }
             return SendSuccess(JSON.parse(res));

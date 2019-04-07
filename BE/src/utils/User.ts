@@ -1,6 +1,7 @@
 import NodeCache from 'node-cache-promise';
 import axios from 'axios';
-import Const from "../Const";
+import Logger from "./Logger";
+import Redis from "./Redis";
 
 namespace User {
     //РЕДИС
@@ -11,20 +12,25 @@ namespace User {
         if (!session) {
             throw new Error("Incorrect Session");
         }
-
-        if (Const.SMORODINA_MOD_EPD_FAKEID === "true") {
+        Logger.log("session hier");
+        //FUCK
+        if (process.env.SMORODINA_MOD_EPD_FAKEID === "true") {
             return require('../../../__debugUserInfo').default;
         }
         //Реализовать через REDIS!
-        const user = await cache.get(session);
+        let user = Redis.get(session);
+        //const user = await cache.get(session);
         if (user) {
-            // FUCK
-            console.log("4");
             return user;
         }
-        const response = await axios.get(`http://${Const.SMORODINA_ACCESS_SERVER_HOST}:${Const.SMORODINA_ACCESS_SERVER_PORT}/check?session=${session}`);
+
+        let url = '';
+        //url = `http://${process.env.SMORODINA_ACCESS_SERVER_HOST}:${process.env.SMORODINA_ACCESS_SERVER_PORT}/check?session=${session}`
+        url = ' https://xn--e1aaobnafwhcg.xn--80ahmohdapg.xn--80asehdb/access/check?session=' + session;
+        Logger.log(url);
+        const response = await axios.get(url);
         // FUCK
-        console.log("SMORODINA_ACCESS_SERVER_HOST: " + response + "\n" + "\t" + response.data);
+        console.log("SMORODINA_ACCESS_SERVER_HOST: " + response + "\n" + "\t" + response.data.toString());
         const data = response.data;
 
         if (typeof data === "object") {
@@ -34,7 +40,8 @@ namespace User {
                     isSuperuser: data.result.login === "superuser"
                 };
                 //РЕДИС
-                cache.set(data.result.session, user);
+                //cache.set(data.result.session, user);
+                Redis.setex(session, 3600, JSON.stringify(user));
                 return user;
             }
             throw (new Error(data.message));

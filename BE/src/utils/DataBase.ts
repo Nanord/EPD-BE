@@ -1,10 +1,9 @@
 import { request } from 'graphql-request';
 import * as fs from 'fs';
 import * as path from 'path';
-import Const from "../Const";
 
 const queryCache: any = {};
-const endpoint = `http://${Const.SMORODINA_MOD_EPD_PRISMA_HOST}:${Const.SMORODINA_MOD_EPD_PRISMA_PORT}`;
+const endpoint = `http://${process.env.SMORODINA_MOD_EPD_PRISMA_HOST}:${process.env.SMORODINA_MOD_EPD_PRISMA_PORT}`;
 /**
  * Выполнение GraphQL квери
  */

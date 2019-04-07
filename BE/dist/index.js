@@ -1,7 +1,4 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -9,8 +6,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var Const_1 = __importDefault(require("./Const"));
 require('dotenv').config();
 var Methods = __importStar(require("./api"));
 var Socket_1 = __importDefault(require("./api/Socket"));
@@ -31,7 +30,8 @@ if (!__dirname.match("/snapshot/")) {
 var app = express_1.default();
 app.use(function (req, res, next) {
     res.header("x-powered-by", "SMORODINA");
-    res.header("Access-Control-Allow-Origin", Const_1.default.SMORODINA_ALLOW_ORIGIN);
+    //res.header("Access-Control-Allow-Origin", process.env.SMORODINA_ALLOW_ORIGIN);
+    //res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET,POST");
     res.header("Access-Control-Allow-Headers", "Content-Type");
     next();
@@ -100,7 +100,7 @@ app.all("/ok", function (req, res) {
     });
 });
 var server = require('http').Server(app);
-server.listen(Const_1.default.SMORODINA_MOD_EPD_PORT);
+server.listen(process.env.SMORODINA_MOD_EPD_PORT);
 /**
  * WS
  * SERVER
@@ -109,5 +109,14 @@ Socket_1.default.start(server);
 /**
  * Приветсвие
  */
-console.log("LISTEN " + Const_1.default.SMORODINA_MOD_EPD_PORT + " ");
+console.log("LISTEN " + process.env.SMORODINA_MOD_EPD_PORT + " ");
+//For pm2
+// @ts-ignore
+// process.send("ready");
+// process.on('SIGINT', function() {
+//     server.stop();
+//     Socket.wsServer.closeAllConnections();
+//     Redis.client.quit();
+//     Logger.warning("pm2 sending close signal")
+// });
 //# sourceMappingURL=index.js.map

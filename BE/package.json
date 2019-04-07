@@ -4,8 +4,9 @@
   "description": "Шлюз для онлайн касс",
   "main": "index",
   "scripts": {
-    "start": "node ./dist/index.js",
-    "start2": "ts-node ./src/index.ts --arguments",
+    "start": "ts-node ./src/index.ts --no-daemon",
+    "start_pm2": "npx typescript --build && pm2 start ./.pm2/ecosystem.config.js --no-daemon",
+    "start_dist": "node ./dist/index.js",
     "build-BE": "npx typescript --build"
   },
   "author": "Borisov Alexandr",

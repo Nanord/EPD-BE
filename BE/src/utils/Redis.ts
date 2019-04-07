@@ -2,7 +2,6 @@ import redis, { RedisClient } from 'redis';
 import Logger from './Logger';
 import {error} from "util";
 import {rejects} from "assert";
-import Const from "../Const";
 
 class Redis {
     static instance: Redis;
@@ -32,6 +31,7 @@ class Redis {
         this.client.on("error", (error) => {
             Logger.error("Cannot connect to redis server" + error.message);
         });
+
     }
 
     /**
@@ -113,8 +113,12 @@ class Redis {
         return this.promisify(this.client.SADD, arguments);
     }
 
-    public sismember(valu: string) {
+    public sismember(key: string, valu: string) {
         return this.promisify(this.client.SISMEMBER, arguments);
+    }
+
+    public stop() {
+        return this.promisify(this.client.close, arguments);
     }
 
 }

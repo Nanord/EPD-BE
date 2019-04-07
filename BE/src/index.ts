@@ -1,5 +1,3 @@
-import Const from "./Const";
-
 require('dotenv').config();
 
 import * as Methods from './api';
@@ -27,7 +25,9 @@ const app = express();
 
 app.use((req, res, next) => {
     res.header("x-powered-by", "SMORODINA");
-    res.header("Access-Control-Allow-Origin", Const.SMORODINA_ALLOW_ORIGIN);
+    //FUCK
+    res.header("Access-Control-Allow-Origin", "*");
+   //res.header("Access-Control-Allow-Origin", process.env.SMORODINA_ALLOW_ORIGIN);
     res.header("Access-Control-Allow-Methods", "GET,POST");
     res.header("Access-Control-Allow-Headers", "Content-Type");
 
@@ -94,7 +94,7 @@ app.post("/test", (req, res) => {
 });
 
 app.all("/ok", (req, res) => {
-    let redis_res = Redis.get("fuck");
+    let redis_res = Redis.get("123");
 
     console.log("OK");
 
@@ -116,7 +116,9 @@ app.all("/ok", (req, res) => {
 
 const server = require('http').Server(app)
 
-server.listen(Const.SMORODINA_MOD_EPD_PORT);
+server.listen(7676)
+//server.listen(process.env.SMORODINA_MOD_EPD_PORT);
+
 
 /**
  * WS
@@ -127,4 +129,13 @@ Socket.start(server);
 /**
  * Приветсвие
  */
-console.log(`LISTEN ${Const.SMORODINA_MOD_EPD_PORT} `);
+console.log(`LISTEN 7676`);
+//For pm2
+// @ts-ignore
+// process.send("ready");
+// process.on('SIGINT', function() {
+//     server.stop();
+//     Socket.wsServer.closeAllConnections();
+//     Redis.client.quit();
+//     Logger.warning("pm2 sending close signal")
+// });

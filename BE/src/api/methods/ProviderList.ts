@@ -3,7 +3,6 @@ import Logger from "../../utils/Logger";
 import User from "../../utils/User";
 import Sod from "../../utils/Sod";
 import Redis from "../../utils/Redis";
-import Const from "../../Const";
 
 
 export default new Service({
@@ -11,22 +10,19 @@ export default new Service({
     description: "Список поставщиков услуг, привязанных к Получателю ДС",
     on: async function (request, SendSuccess, SendError) {
         try {
-            if(Const.DEBUG) {
-                Logger.log("Method:ProviderList, user " + request)
-            }
+            //fuck
+            Logger.log("Method: " + this.name + ", user " + request.session);
             let user;
-            user = Redis.get(request.session);
-            if(!user) {
-                try {
-                    user = await User.check(request.session);
-                } catch (error) {
-                    return SendError(1000, error.message);
-                }
-                if (!user.roles.find(role => role.name === "LK_ADMIN") && !user.isSuperuser) {
-                    return SendError(1001);
-                }
+            try {
+                user = await User.check(request.session);
+                Logger.log("user checked");
+            } catch (error) {
+                Logger.log("user unchecked");
+                return SendError(1000, error.message);
             }
-
+            if (!user.roles.find(role => role.name === "LK_ADMIN") && !user.isSuperuser) {
+                return SendError(1001);
+            }
             // @ts-ignore
             // const res = await Sod.performQuery({
             //     reqtype: request.reqtype || null,
@@ -42,7 +38,7 @@ export default new Service({
                     acceptorid: request.acceptorid,
                     providers: [
                         {
-                            id: "number",
+                            id: "FUCk",
                             name: "string",
                             summ: "number",
                             fcount: "number",

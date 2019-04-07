@@ -52,44 +52,6 @@ class Logger {
     static warning(message: string): void {
         Logger.getInstance().print(message, LogTypes.WARNING);
     }
-
-    /**
-     * Записать в БД
-     * + сделать bc
-     */
-    static async stacktraсe(errorText: string, stack = "") {
-        if (!stack) {
-            stack = "";
-        }
-        if (stack && typeof stack !== "string") {
-            //@ts-ignore
-            stack = stack.toString();
-        }
-
-        try {
-            const res = await $("ErrorCreate", {
-                name: errorText,
-                stack: stack || 'No stacktrace',
-                timestamp: new Date()
-            });
-            Logger.error("Error " + res.id + ": " + errorText);
-
-            // FUCK
-            console.log("Что то отправляю админам");
-            Socket.sendToAdmin({
-                name: "NewError",
-                data: await $("ErrorList", res)
-            });
-
-            return res.id;
-
-        } catch (error) {
-            Logger.error(errorText);
-            Logger.error("Ошибка работы с БД " + error.message);
-
-            return null;
-        }
-    }
 }
 
 export default Logger;

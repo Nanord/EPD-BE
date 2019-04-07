@@ -87,6 +87,11 @@ class WS {
     broadcast(name: string, data: {}) {
         this.SOCKETS.forEach(socket => socket.send(JSON.stringify({name, data })));
     }
+
+    stop() {
+        this.wsServer.closeAllConnections();
+        this.wsServer.shutDown();
+    }
 }
 
 export default WS;
