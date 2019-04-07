@@ -8,7 +8,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import {router} from "websocket";
 import path from 'path'
-import Logger from "./utils/Logger";
+import Logger from "./utils/logger/Logger";
 import Redis from "./utils/Redis";
 
 let currentRoot = process.execPath;
@@ -71,7 +71,7 @@ app.post("/api/:method", (req, res) => {
         return;
     }
 
-    Method.executor(req.body, (response: any) => res.status(200).send(response));
+    Method.executor(req, (response: any) => res.status(200).send(response));
 
     // if (req.headers["content-type"] == "application/json") {
     //     Method(req.body, (response: any) => res.status(200).send(response));
@@ -116,7 +116,7 @@ app.all("/ok", (req, res) => {
 
 const server = require('http').Server(app)
 
-server.listen(7676)
+server.listen(7677)
 //server.listen(process.env.SMORODINA_MOD_EPD_PORT);
 
 

@@ -1,6 +1,6 @@
 import Errors from './Errors';
 import User from "../utils/User";
-import Logger from "../utils/Logger";
+import Logger from "../utils/logger/Logger";
 interface Service {
     on: Function
     name: string
@@ -17,8 +17,8 @@ class Service {
         this.on = opt.on;
     }
 
-    name = "Unknown"
-    description = ""
+    name = "Unknown";
+    description = "";
 
     executor(req: any, res: any) {
         /**
@@ -55,8 +55,28 @@ class Service {
          */
         function SendError(code: number = 1, message: string = ""): void {
             const msg = message || (Errors[code] ? Errors[code].message : "Ошибка");
-
             this({ ok: false, code, message: msg, result: null });
+        }
+
+        /**
+         * Проверить сессию
+         */
+        async function checkUser(session: string) {
+            let user = await User.check(session);
+            user.then(
+                result => {
+                    Logger.methods().log("user checked" + result.data);
+                    if (!result.isSuperuser) {
+                        Logger.methods().warning("user not superuser");
+                        return SendError.bind(1001);
+                    }
+                    return user;
+                },
+                error => {
+                    Logger.methods().warning("user unchecked");
+                    return SendError.bind(1000, error.message);
+                }
+            );
         }
 
         /**
@@ -64,7 +84,7 @@ class Service {
          * делаем bind для SendSuccess и SendError на pipe res
          * для того чтобы они могли передать ответ
          */
-        return this.on.bind(this)(req, SendSuccess.bind(res), SendError.bind(res));
+        return this.on.bind(this)(req, checkUser.bind(req.session), SendSuccess.bind(res), SendError.bind(res));
     }
 
     /**

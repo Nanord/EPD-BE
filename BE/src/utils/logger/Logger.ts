@@ -1,6 +1,11 @@
 import moment from 'moment';
-import $ from './DataBase';
-import Socket from '../api/Socket';
+import $ from '../DataBase';
+import Socket from '../../api/Socket';
+import {type} from "os";
+import LogDB from "./LogDB";
+import LogAccess from "./LogAccess";
+import LogSod from "./LogSod";
+import LogMethods from "./LogMethods";
 
 enum LogTypes {
     MESSAGE,
@@ -52,6 +57,29 @@ class Logger {
     static warning(message: string): void {
         Logger.getInstance().print(message, LogTypes.WARNING);
     }
-}
 
+    static db() {
+        if(true) {
+            return LogDB;
+        }
+    }
+
+    static access() {
+        if(true) {
+            return LogAccess;
+        }
+    }
+
+    static sod() {
+        if(true) {
+            return LogSod;
+        }
+    }
+
+    static methods() {
+        if(true) {
+            return LogMethods;
+        }
+    }
+}
 export default Logger;

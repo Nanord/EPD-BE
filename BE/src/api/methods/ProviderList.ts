@@ -1,5 +1,5 @@
 import Service from '../Service';
-import Logger from "../../utils/Logger";
+import Logger from "../../utils/logger/Logger";
 import User from "../../utils/User";
 import Sod from "../../utils/Sod";
 import Redis from "../../utils/Redis";
@@ -8,31 +8,20 @@ import Redis from "../../utils/Redis";
 export default new Service({
     name: "ProviderList",
     description: "Список поставщиков услуг, привязанных к Получателю ДС",
-    on: async function (request, SendSuccess, SendError) {
+    on: async function (request, checkUser, SendSuccess, SendError) {
         try {
-            //fuck
-            Logger.log("Method: " + this.name + ", user " + request.session);
-            let user;
-            try {
-                user = await User.check(request.session);
-                Logger.log("user checked");
-            } catch (error) {
-                Logger.log("user unchecked");
-                return SendError(1000, error.message);
-            }
-            if (!user.roles.find(role => role.name === "LK_ADMIN") && !user.isSuperuser) {
-                return SendError(1001);
-            }
-            // @ts-ignore
-            // const res = await Sod.performQuery({
-            //     reqtype: request.reqtype || null,
-            //     acceptorid: request.acceptorid || null
-            //     listpartid: request.listpartid || null,
-            //     listcount: request.listcount || null,
-            // });
+            const user = await checkUser(request.body.session);
+            Logger.methods().log(user);
             let res;
             res = await Redis.get('methods:2');
             if(!res) {
+                // @ts-ignore
+                // const res = await Sod.performQuery({
+                //     reqtype: request.reqtype || null,
+                //     acceptorid: request.acceptorid || null
+                //     listpartid: request.listpartid || null,
+                //     listcount: request.listcount || null,
+                // });
                 res = {
                     reqtype: 2,
                     acceptorid: request.acceptorid,
@@ -51,12 +40,14 @@ export default new Service({
                         }
                     ]
                 };
-                res = JSON.stringify(res);
                 Redis.setex('methods:2', 3600, JSON.stringify(res));
             }
+            res = JSON.stringify(res);
+            Logger.methods().log(this.name + ": \n\tres:" + res);
             return SendSuccess(JSON.parse(res));
 
         } catch (error) {
+            Logger.methods().error(this.name + ": " + error.message + " " + error.err);
             return SendError(100, error.err);
         }
     }

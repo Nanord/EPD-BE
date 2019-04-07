@@ -1,52 +1,70 @@
 import NodeCache from 'node-cache-promise';
 import axios from 'axios';
-import Logger from "./Logger";
+import Logger from "./logger/Logger";
 import Redis from "./Redis";
 
 namespace User {
-    //РЕДИС
-    const cache = new NodeCache({ stdTTL: 100, checkperiod: 120 });
 
     export async function check(session: string) {
-
-        if (!session) {
-            throw new Error("Incorrect Session");
+        Logger.access().log("check user: " + session);
+        if (!session && typeof session === 'undefined') {
+            let msg = "Incorrect Session";
+            Logger.access().warning(msg);
+            throw new Error(msg);
         }
-        Logger.log("session hier");
         //FUCK
         if (process.env.SMORODINA_MOD_EPD_FAKEID === "true") {
+            Logger.access().log("Debug session");
             return require('../../../__debugUserInfo').default;
         }
-        //Реализовать через REDIS!
-        let user = Redis.get(session);
-        //const user = await cache.get(session);
+        let user = await Redis.get("user:" + session);
         if (user) {
+            Logger.access().log("User found in DB" + user.data);
             return user;
         }
 
         let url = '';
         //url = `http://${process.env.SMORODINA_ACCESS_SERVER_HOST}:${process.env.SMORODINA_ACCESS_SERVER_PORT}/check?session=${session}`
         url = ' https://xn--e1aaobnafwhcg.xn--80ahmohdapg.xn--80asehdb/access/check?session=' + session;
-        Logger.log(url);
-        const response = await axios.get(url);
-        // FUCK
-        console.log("SMORODINA_ACCESS_SERVER_HOST: " + response + "\n" + "\t" + response.data.toString());
-        const data = response.data;
-
-        if (typeof data === "object") {
-            if (data.ok == true) {
-                const user = {
-                    ...data.result,
-                    isSuperuser: data.result.login === "superuser"
-                };
-                //РЕДИС
-                //cache.set(data.result.session, user);
-                Redis.setex(session, 3600, JSON.stringify(user));
-                return user;
-            }
-            throw (new Error(data.message));
-        }
-        throw (new Error("Error occured while user session check"));
+        Logger.access().log("Request to " + url);
+        return new Promise((resolve, reject) => {
+            axios({
+                method: 'GET',
+                url,
+                timeout: 3000
+            }).then(response => {
+                Logger.access().log("response is successful");
+                const data = response.data;
+                if (typeof data === "object") {
+                    Logger.access().log("res: " + data.ok + " " + data.result);
+                    if (data.ok == true) {
+                        const user = {
+                            ...data.result,
+                            isSuperuser: data.result.login === "superuser"
+                        };
+                        Redis.setex("user:" + session, 360, JSON.stringify(user));
+                        resolve(user)
+                    } else {
+                        let msg = "User not found";
+                        Logger.access().warning(msg);
+                        reject(msg)
+                    }
+                } else {
+                    let msg = "Error occured while user session check";
+                    Logger.access().error(msg);
+                    reject(msg);
+                }
+            }).catch(error =>{
+                if (error.message) {
+                    Logger.access().error(error.message);
+                    reject(error.message);
+                }
+                else {
+                    Logger.access().error(error.toString());
+                    reject(error);
+                }
+            })
+        });
     }
 }
 export default User;

@@ -1,5 +1,5 @@
 import WS from '../utils/WS';
-import Logger from '../utils/Logger';
+import Logger from '../utils/logger/Logger';
 import User from '../utils/User';
 import {connection} from "websocket";
 class Socket extends WS {

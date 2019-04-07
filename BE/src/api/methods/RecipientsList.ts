@@ -1,5 +1,5 @@
 import Service from '../Service';
-import Logger from "../../utils/Logger";
+import Logger from "../../utils/logger/Logger";
 import User from "../../utils/User";
 import Sod from "../../utils/Sod";
 import Redis from "../../utils/Redis";

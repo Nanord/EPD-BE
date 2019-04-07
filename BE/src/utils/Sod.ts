@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Logger from '../utils/Logger';
+import Logger from './logger/Logger';
 
 class Sod {
     static instance: Sod;
@@ -36,7 +36,7 @@ class Sod {
     public performQuery(params = {}, out_params = {}, needUnicode = false): Promise<any> {
         const name = "хз";
         const org = -1;
-        if (typeof params === 'undefined' || typeof name === 'undefined') {
+            if (typeof params === 'undefined' || typeof name === 'undefined') {
             throw ("Параметры функции должны быть опеределены");
         }
         const requestObject = { name, org, params, out_params };
@@ -76,20 +76,19 @@ class Sod {
                         message: "Ошибка работы с СОД"
                     });
                 }
-            })
-                .catch((error) => {
-                    //@ts-ignore
-                    if (error.message) {
-                        Logger.error(`SOD !! ${error.message}`);
-                    }
-                    else {
-                        Logger.error(`SOD !! ${error.toString()}`);
-                    }
-                    reject({
-                        err: error.message,
-                        message: "Ошибка работы СОД"
-                    });
+            }).catch((error) => {
+                //@ts-ignore
+                if (error.message) {
+                    Logger.error(`SOD !! ${error.message}`);
+                }
+                else {
+                    Logger.error(`SOD !! ${error.toString()}`);
+                }
+                reject({
+                    err: error.message,
+                    message: "Ошибка работы СОД"
                 });
+            });
         });
     }
 
