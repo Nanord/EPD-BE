@@ -1,6 +1,5 @@
 import Service from '../Service';
 import Logger from "../../utils/logger/Logger";
-import User from "../../utils/User";
 import Sod from "../../utils/Sod";
 import Redis from "../../utils/Redis";
 
@@ -13,16 +12,19 @@ export default new Service({
             const user = await checkUser(request.body.session);
             Logger.methods().log(user);
             let res;
-            res = await Redis.get('methods:2');
+            const org = "SM_TEST";
+            res = await Redis.get('methods:2:${org}');
             if(!res) {
-                // @ts-ignore
-                // const res = await Sod.performQuery({
-                //     reqtype: request.reqtype || null,
-                //     acceptorid: request.acceptorid || null
-                //     listpartid: request.listpartid || null,
-                //     listcount: request.listcount || null,
-                // });
-                res = {
+                res = await Sod.performQuery(
+                    "AAA_TEST_SELECT_ALL",
+                    {
+                        // reqtype: request.reqtype || null,
+                        // acceptorid: request.acceptorid || null,
+                        // listpartid: request.listpartid || null,
+                        // listcount: request.listcount || null,
+                    }
+                );
+                /*res = {
                     reqtype: 2,
                     acceptorid: request.acceptorid,
                     providers: [
@@ -39,11 +41,11 @@ export default new Service({
                             fcount: "number2",
                         }
                     ]
-                };
+                };*/
                 Redis.setex('methods:2', 3600, JSON.stringify(res));
             }
             res = JSON.stringify(res);
-            Logger.methods().log(this.name + ": \n\tres:" + res);
+            Logger.methods().log(this.name + ": \n\t\t\tres:" + res);
             return SendSuccess(JSON.parse(res));
 
         } catch (error) {

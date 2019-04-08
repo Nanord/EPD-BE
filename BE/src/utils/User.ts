@@ -13,7 +13,7 @@ namespace User {
             throw new Error(msg);
         }
         //FUCK
-        if (process.env.SMORODINA_MOD_EPD_FAKEID === "true") {
+        if ("true" === "true") {
             Logger.access().log("Debug session");
             return require('../../../__debugUserInfo').default;
         }
@@ -25,7 +25,7 @@ namespace User {
 
         let url = '';
         //url = `http://${process.env.SMORODINA_ACCESS_SERVER_HOST}:${process.env.SMORODINA_ACCESS_SERVER_PORT}/check?session=${session}`
-        url = ' https://xn--e1aaobnafwhcg.xn--80ahmohdapg.xn--80asehdb/access/check?session=' + session;
+        url = 'https://xn--e1aaobnafwhcg.xn--80ahmohdapg.xn--80asehdb/access/check?session=' + session;
         Logger.access().log("Request to " + url);
         return new Promise((resolve, reject) => {
             axios({
@@ -42,7 +42,7 @@ namespace User {
                             ...data.result,
                             isSuperuser: data.result.login === "superuser"
                         };
-                        Redis.setex("user:" + session, 360, JSON.stringify(user));
+                        Redis.setex("user:" + session, 3600, JSON.stringify(user));
                         resolve(user)
                     } else {
                         let msg = "User not found";

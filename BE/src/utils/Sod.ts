@@ -30,24 +30,26 @@ class Sod {
 
     /**
      * Выполнить запрос в СОД
+     * @param name
      * @param {Object} params
      * @param {Object} out_params
+     * @param needUnicode
      */
-    public performQuery(params = {}, out_params = {}, needUnicode = false): Promise<any> {
-        const name = "хз";
-        const org = -1;
+    public performQuery(name: string, params = {}, out_params = {}, needUnicode = false): Promise<any> {
+        const org = "SM_TEST";
+        const sodid = -1;
             if (typeof params === 'undefined' || typeof name === 'undefined') {
             throw ("Параметры функции должны быть опеределены");
         }
         const requestObject = { name, org, params, out_params };
+        Logger.sod().log("req: " + requestObject.name + " " + requestObject.params);
         let json = JSON.stringify(requestObject);
         if (needUnicode) {
             json = this.jsonEncode(json);
         }
-
         //@ts-ignore
         //const url = `http://${process.env.SMORODINA_SOD_SERVER_HOST}:${process.env.SMORODINA_SOD_SERVER_PORT}/${process.env.SMORODINA_SOD_SERVER_PATH}`;
-        const url = `http://172.16.200.191:8077/SOD`;
+        const url = `https://xn--e1aaobnafwhcg.xn--80ahmohdapg.xn--80asehdb/sod/SOD`;
 
         return new Promise((resolve, reject) => {
             axios({
@@ -70,7 +72,7 @@ class Sod {
                 if (res.data.result.code == "1004") {
                     resolve(res.data.contents as any[]);
                 } else {
-                    Logger.error(`SOD !! (${res.data.result.code}) ${res.data.result.message}`);
+                    Logger.sod().error(`SOD !! (${res.data.result.code}) ${res.data.result.message}`);
                     reject({
                         err: res.data.result.message,
                         message: "Ошибка работы с СОД"
@@ -79,10 +81,10 @@ class Sod {
             }).catch((error) => {
                 //@ts-ignore
                 if (error.message) {
-                    Logger.error(`SOD !! ${error.message}`);
+                    Logger.sod().error(`!!${error.message}`);
                 }
                 else {
-                    Logger.error(`SOD !! ${error.toString()}`);
+                    Logger.sod().error(`!!${error.toString()}`);
                 }
                 reject({
                     err: error.message,

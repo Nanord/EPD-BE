@@ -63,20 +63,24 @@ class Service {
          */
         async function checkUser(session: string) {
             let user = await User.check(session);
-            user.then(
-                result => {
-                    Logger.methods().log("user checked" + result.data);
-                    if (!result.isSuperuser) {
-                        Logger.methods().warning("user not superuser");
-                        return SendError.bind(1001);
+            if(typeof user === "function") {
+                user.then(
+                    result => {
+                        Logger.methods().log("user checked" + result.data);
+                        if (!result.isSuperuser) {
+                            Logger.methods().warning("user not superuser");
+                            return SendError.bind(1001);
+                        }
+                        return user;
+                    },
+                    error => {
+                        Logger.methods().warning("user unchecked");
+                        return SendError.bind(1000, error.message);
                     }
-                    return user;
-                },
-                error => {
-                    Logger.methods().warning("user unchecked");
-                    return SendError.bind(1000, error.message);
-                }
-            );
+                );
+            } else {
+                return user;
+            }
         }
 
         /**
