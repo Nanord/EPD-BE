@@ -32,7 +32,8 @@ class Socket extends WS {
 
                     } catch (error) {
                         Logger.ws().warning("Invalid session on socket login " + message.session);
-                    } break;
+                    }
+                    break;
                 case 'subscribe':
                     try {
                         let name = "fuck you";
@@ -41,10 +42,6 @@ class Socket extends WS {
                     } catch (error) {
                         Logger.ws().warning("Invalid subsctibe" + message + error)
                     }
-                    break;
-                case 'api':
-                    Logger.ws().log(message.type);
-                    connection.send(JSON.stringify({name:"f", f:"name"}))
                     break;
                 default:
                     Logger.ws().warning("Incorrect socket method called " + message.method);

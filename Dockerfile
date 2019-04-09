@@ -3,11 +3,9 @@ FROM node:carbon
 # Создать директорию app
 WORKDIR /app
 
-# Установить зависимости приложения
-# Используется символ подстановки для копирования как package.json, так и package-lock.json,
-# работает с npm@5+
-COPY package*.json ./
+MAINTAINER Nanord nanord2@yandex.ru
 
+RUN apt-get update
 
 # Если yarn не установлен то:
 #   wget https://yarnpkg.com/latest.tar.gz
@@ -22,9 +20,9 @@ COPY package*.json ./
 #    ADD package.json /tmp/package.json
 #    RUN cd /tmp && yarn
 #    RUN mkdir -p /opt/app && cd /opt/app && ln -s /tmp/node_modules
-RUN yarn install
 
-COPY src /app
+COPY ./BE /app
+RUN cd /app && yarn install
 
 EXPOSE 7676
-CMD ["ts-node","index.ts"]
+RUN cd /app/BE && yarn start_pm2
