@@ -21,7 +21,7 @@ RUN apt-get update
 #    RUN cd /tmp && yarn
 #    RUN mkdir -p /opt/app && cd /opt/app && ln -s /tmp/node_modules
 
-COPY ./* /app
+COPY ./BE /app
 RUN cd /app && yarn install
 
 RUN yarn start_pm2

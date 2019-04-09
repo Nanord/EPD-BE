@@ -3,7 +3,7 @@ version: "3.7"
 services:
 
   epd-be:
-    build: ./BE
+    build: ./
     restart: always
     ports:
       - 7676:7676
