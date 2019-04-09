@@ -27,31 +27,12 @@ module.exports = {
       SMORODINA_MOD_EPD_PORT: string = "7676",
       SMORODINA_MOD_EPD_FAKEID: string = "true",
 
-      //BE  public sma config
-      SMA_HOST: string = "172.16.200.193",
-      SMA_PORT: string = "4466",
-
       //BE sod config
       SMORODINA_MOD_EPD_SOD_ENDPOINT: string = "http://172.16.200.193:8077/SOD",
 
       //BE Access config
       SMORODINA_ACCESS_SERVER_HOST: string = "172.16.200.193",
       SMORODINA_ACCESS_SERVER_PORT: string = "8050",
-
-      //FE general config
-      SMORODINA_BUILD_TYPE: string = "testflight",
-      SMORODINA_BUILD_ANALYZ: string = "false",
-      SMORODINA_BUILD_SOURCE_MAP: string = "true",
-
-      //FE mod config
-      SMORODINA_BUILD_MOD_EPD_HOST: string = "172.16.200.193:7676",
-      SMORODINA_BUILD_MOD_EPD_HTTPS: string = "false",
-      SMORODINA_BUILD_MOD_EPD_APIV: string = "1",
-      SMORODINA_REACT_EXTERNAL: string = "false",
-
-      //BE prisma
-      SMORODINA_MOD_EPD_PRISMA_HOST: string = "127.0.0.1",
-      SMORODINA_MOD_EPD_PRISMA_PORT: string = "4466"
     },
     env_production: {
       NODE_ENV: 'production'

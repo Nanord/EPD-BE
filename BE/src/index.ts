@@ -37,24 +37,6 @@ app.use((req, res, next) => {
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 app.use(compression());
-// Удалить в будующем
-app.use(express.static(path.join(__dirname, "public")));
-
-// app.use(function(req, res, next){
-//     res.status(404);
-//     Logger.log('Not found URL: ' + req.url);
-//     res.status(404);
-//     res.send({ error: 'Not found' });
-//     return;
-// });
-
-// app.use(function(err, req, res, next){
-//     res.status(err.status || 500);
-//     Logger.error('Internal error(' + res.status + ") " + err.message);
-//     res.send({ error: err.message });
-//     return;
-// });
-///
 
 /**
  * Внешний API
@@ -64,14 +46,13 @@ app.post("/api/:method", (req, res) => {
     res.set('Content-Type', 'application/json; charset=utf-8');
 
     let result = { ok: false, code: 1000, message: "Sorry but no..." };
-
-    const Method = Methods[req.params.method] as Service;
+    const Method = Methods[req.params.method.toLowerCase()] as Service;
     if (!Method) {
         res.status(200).send(result);
         return;
     }
 
-    Method.executor(req, (response: any) => res.status(200).send(response));
+    Method.executor(req.body, (response: any) => res.status(200).send(response));
 
     // if (req.headers["content-type"] == "application/json") {
     //     Method(req.body, (response: any) => res.status(200).send(response));
@@ -81,42 +62,27 @@ app.post("/api/:method", (req, res) => {
     // }
 });
 
+app.all("/ok", (req, res) => res.send("OK"));
 
-app.get("/test", (req, res) => {
-    res.sendFile(__dirname + "/test.html");
+app.use((req, res, next) => {
+    res.status(404);
+    Logger.log('Not found URL: ' + req.url);
+    res.status(404);
+    res.send({ error: 'Not found' });
+    return;
 });
 
-app.post("/test", (req, res) => {
-    console.log("test");
-    res.set('Content-Type', 'application/json; charset=utf-8');
-    res.status(200)
-    res.send("ХУЙ");
+app.use((err, req, res, next) => {
+    res.status(err.status || 500);
+    Logger.error('Internal error(' + 500 + ") " + err.message);
+    res.send({ error: err.message });
+    return;
 });
 
-app.all("/ok", (req, res) => {
-    let redis_res = Redis.get("123");
 
-    console.log("OK");
+const server = require('http').Server(app);
 
-    // @ts-ignore
-    redis_res
-        .then(
-            result => {
-                res.status(200);
-                Logger.log("/OK res " + result);
-                res.send(JSON.parse(result));
-            },
-            error => {
-                res.status(500);
-                Logger.log("/OK err " + error);
-                res.send(JSON.parse(error));
-            }
-        );
-});
-
-const server = require('http').Server(app)
-
-server.listen(7677)
+server.listen(7677);
 //server.listen(process.env.SMORODINA_MOD_EPD_PORT);
 
 

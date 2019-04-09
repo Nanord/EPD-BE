@@ -9,7 +9,7 @@ interface Service {
 
 class Service {
 
-    constructor(opt: { name: string, description?: string, on: Function }) {
+    constructor(opt: { name: string, description?: string, type?: number, on: Function }) {
         this.name = opt.name;
         if (opt.description) {
             this.description = opt.description;
@@ -19,6 +19,10 @@ class Service {
 
     name = "Unknown";
     description = "";
+    /**
+     * Reqtype
+     */
+    type = 0;
 
     executor(req: any, res: any) {
         /**

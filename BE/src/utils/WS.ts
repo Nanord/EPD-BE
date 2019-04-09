@@ -1,4 +1,5 @@
 import websocket, { server, connection } from 'websocket';
+import Logger from "./logger/Logger";
 
 
 
@@ -44,7 +45,7 @@ class WS {
 
     onMessage(data, connection) {
         //on data recieved
-        console.log("WS.onMessage: " + data.toString())
+        Logger.ws().log(".onMessage: " + data.toString())
     }
 
     attachUser(connection: connection, user: any) {
@@ -54,12 +55,11 @@ class WS {
 
     sendMessageByMatch(message: string, matcher: (user, socket) => boolean) {
         //FUCK
-        console.log("точно отправил " + message + "\n\t" + this.SOCKETS.length);
+        Logger.ws().log("точно отправил " + message + "\n\t" + this.SOCKETS.length);
         this.SOCKETS
             .forEach(function (socket) {
-                console.log("Адресс " + socket.remoteAddress + "\n")
+                Logger.ws().log("Адресс " + socket.remoteAddress + "\n")
             });
-        //FUCK
         if (this.hasClientsConnected()) {
             this.SOCKETS
                 //@ts-ignore

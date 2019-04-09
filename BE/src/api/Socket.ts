@@ -14,7 +14,7 @@ class Socket extends WS {
 
     async onMessage(data: any, connection: connection) {
         if (data.type !== "utf8") {
-            console.warn("Socket message with type " + data.type + " ignored.");
+            Logger.ws().warning("Socket message with type " + data.type + " ignored.");
             return;
         }
         try {
@@ -27,11 +27,11 @@ class Socket extends WS {
                         /**
                          * Записываем пользователя в сокет
                          */
-                        Logger.log("Connected user:" + message.session)
+                        Logger.ws().log("Connected user:" + message.session)
                         this.attachUser(connection, user);
 
                     } catch (error) {
-                        Logger.warning("Invalid session on socket login " + message.session);
+                        Logger.ws().warning("Invalid session on socket login " + message.session);
                     } break;
                 case 'subscribe':
                     try {
@@ -39,18 +39,18 @@ class Socket extends WS {
                         let data = {fuck:"you"};
                         connection.send(JSON.stringify({name, data}));
                     } catch (error) {
-                        Logger.warning("Invalid subsctibe" + message + error)
+                        Logger.ws().warning("Invalid subsctibe" + message + error)
                     }
                     break;
                 case 'api':
-                    Logger.log(message.type);
+                    Logger.ws().log(message.type);
                     connection.send(JSON.stringify({name:"f", f:"name"}))
                     break;
                 default:
-                    Logger.warning("Incorrect socket method called " + message.method);
+                    Logger.ws().warning("Incorrect socket method called " + message.method);
             }
         } catch (error) {
-            Logger.error(error.message + "\n" + error.stack);
+            Logger.ws().error(error.message + "\n" + error.stack);
         }
     }
 

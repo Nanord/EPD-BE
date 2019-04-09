@@ -42,7 +42,7 @@ class Sod {
             throw ("Параметры функции должны быть опеределены");
         }
         const requestObject = { name, org, params, out_params };
-        Logger.sod().log("req: " + requestObject.name + " " + requestObject.params);
+        Logger.sod().log("req: " + requestObject.name);
         let json = JSON.stringify(requestObject);
         if (needUnicode) {
             json = this.jsonEncode(json);

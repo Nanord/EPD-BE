@@ -6,6 +6,7 @@ import LogDB from "./LogDB";
 import LogAccess from "./LogAccess";
 import LogSod from "./LogSod";
 import LogMethods from "./LogMethods";
+import LogWS from "./LogWS";
 
 enum LogTypes {
     MESSAGE,
@@ -43,11 +44,15 @@ class Logger {
     }
 
     static message(message: string): void {
-        Logger.getInstance().print(message, LogTypes.MESSAGE);
+        if(true) {
+            Logger.getInstance().print(message, LogTypes.MESSAGE);
+        }
     }
 
     static log(message: string): void {
-        Logger.message(message);
+        if(true) {
+            Logger.message(message);
+        }
     }
 
     static error(message: string): void {
@@ -55,7 +60,9 @@ class Logger {
     }
 
     static warning(message: string): void {
-        Logger.getInstance().print(message, LogTypes.WARNING);
+        if(true) {
+            Logger.getInstance().print(message, LogTypes.WARNING);
+        }
     }
 
     static db() {
@@ -79,6 +86,12 @@ class Logger {
     static methods() {
         if(true) {
             return LogMethods;
+        }
+    }
+
+    static ws() {
+        if(true) {
+            return LogWS;
         }
     }
 }
