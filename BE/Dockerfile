@@ -21,8 +21,7 @@ RUN apt-get update
 #    RUN cd /tmp && yarn
 #    RUN mkdir -p /opt/app && cd /opt/app && ln -s /tmp/node_modules
 
-COPY ./BE /app
+COPY ./* /app
 RUN cd /app && yarn install
 
-EXPOSE 7676
-RUN cd /app/BE && yarn start_pm2
+RUN yarn start_pm2
