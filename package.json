@@ -3,12 +3,11 @@
     "author": "Borisov Alexandr",
     "scripts": {
         "start_pm2": "pm2 kill && cd ./BE && npx typescript --build && pm2 start ./.pm2/ecosystem.config.js --no-daemon",
-        "start2": "ts-node %NODE_DEBUG_OPTION% ./BE/src/index.ts --arguments",
+        "start_pm2_docker": "pm2 start ./.pm2/ecosystem.config.js --no-daemon",
+        "start": "ts-node %NODE_DEBUG_OPTION% ./BE/src/index.ts --arguments",
         "build-BE": "npx typescript --build ./BE",
-        "fork": "pm2 start ./build/epd-app-linux",
-        "exportenv": "export $(grep -v '^#' .env | xargs)",
-        "cluster": "NODE_ENV=production pm2 start ./build/epd-app-linux -i MAX",
-        "clear": "rm -rf ./node_modules && rm -rf ./BE/node_modules "
+        "clear": "rm -rf ./node_modules && rm -rf ./BE/node_modules ",
+        "docker-run": "./BE && npx typescript --build && sudo docker-compose up --build"
     },
     "pkg": {
         "assets": [
