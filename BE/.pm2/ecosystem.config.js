@@ -32,7 +32,7 @@ module.exports = {
         LOG_WS: string = "true",
 
         //BE config
-        SMORODINA_EPD_PORT: string = "7677",
+        SMORODINA_EPD_PORT: string = "7676",
         SMORODINA_EPD_FAKEID: string = "true",
 
         //BE sod config
@@ -43,7 +43,7 @@ module.exports = {
         SMORODINA_ACCESS_SERVER_PORT: string = "8050",
 
         //BE redis
-        SMORODINA_EPD_REDIS_HOST: string = "localhost",
+        SMORODINA_EPD_REDIS_HOST: string = "redis",
         SMORODINA_EPD_REDIS_PORT: string = "6379",
         SMORODINA_EPD_REDIS_TTL: string = "3600"
     },
