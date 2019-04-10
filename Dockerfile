@@ -21,6 +21,7 @@ RUN apt-get update
 #    RUN cd /tmp && yarn
 #    RUN mkdir -p /opt/app && cd /opt/app && ln -s /tmp/node_modules
 
+EXPOSE 7676
 COPY ./BE /app
 RUN cd /app && yarn install
 
