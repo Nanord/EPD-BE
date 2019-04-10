@@ -82,7 +82,7 @@ app.use((err, req, res, next) => {
 
 const server = require('http').Server(app);
 
-server.listen(process.env.SMORODINA_MOD_EPD_PORT);
+server.listen(process.env.SMORODINA_EPD_PORT);
 
 
 /**
@@ -94,4 +94,4 @@ Socket.start(server);
 /**
  * Приветсвие
  */
-console.log(`LISTEN ${process.env.SMORODINA_MOD_EPD_PORT}`);
+console.log(`LISTEN ${process.env.SMORODINA_EPD_PORT}`);

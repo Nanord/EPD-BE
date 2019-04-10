@@ -36,7 +36,7 @@ module.exports = {
         SMORODINA_EPD_FAKEID: string = "true",
 
         //BE sod config
-        SMORODINA_MOD_EPD_SOD_ENDPOINT: string = "https://xn--e1aaobnafwhcg.xn--80ahmohdapg.xn--80asehdb/sod/SOD",
+        SMORODINA_SOD_SERVER_HOST: string = "https://xn--e1aaobnafwhcg.xn--80ahmohdapg.xn--80asehdb/sod/SOD",
 
         //BE Access config
         SMORODINA_ACCESS_SERVER_HOST: string = "https://xn--e1aaobnafwhcg.xn--80ahmohdapg.xn--80asehdb/access/",
@@ -64,7 +64,7 @@ module.exports = {
         SMORODINA_EPD_FAKEID: string = "true",
 
         //BE sod config
-        SMORODINA_MOD_EPD_SOD_ENDPOINT: string = "https://xn--e1aaobnafwhcg.xn--80ahmohdapg.xn--80asehdb/sod/SOD",
+        SMORODINA_SOD_SERVER_HOST: string = "https://xn--e1aaobnafwhcg.xn--80ahmohdapg.xn--80asehdb/sod/SOD",
 
         //BE Access config
         SMORODINA_ACCESS_SERVER_HOST: string = "https://xn--e1aaobnafwhcg.xn--80ahmohdapg.xn--80asehdb/access/",

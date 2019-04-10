@@ -13,7 +13,7 @@ namespace User {
             throw new Error(msg);
         }
         //FUCK
-        if (process.env.SMORODINA_MOD_EPD_FAKEID === "true") {
+        if (process.env.SMORODINA_EPD_FAKEID === "true") {
             Logger.access().log("Debug session");
             return require('../../../__debugUserInfo').default;
         }
