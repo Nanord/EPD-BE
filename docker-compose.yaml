@@ -2,14 +2,14 @@ version: "3.7"
 
 services:
 
-  epd-be:
-    build: ./
-    restart: always
-    ports:
-      - 7676:7676
-
   redis:
     build: ./redis
     restart: always
     ports:
       - 6379:6379
+
+  epd-be:
+    build: ./
+    restart: always
+    ports:
+      - 7676:7676
