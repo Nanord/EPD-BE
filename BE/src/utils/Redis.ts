@@ -17,7 +17,7 @@ class Redis {
      * Адрес сервера redis
      */
     //host: string = process.env.SMORODINA_MOD_LKADMIN_REDIS_HOST || "127.0.0.1";
-    host: string = "localhost";
+    host: string = "redis";
     port: number = 6379;
 
     /**
