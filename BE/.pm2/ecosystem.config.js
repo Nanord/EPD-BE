@@ -13,7 +13,7 @@ module.exports = {
     //process settings
     autorestart: true,
     watch: true,
-    exec_mode: "fork",
+    exec_mode: "cluster",
     max_memory_restart: '1G',
     kill_timeout : 3000,
     listen_timeout : 1000,
