@@ -11,9 +11,6 @@ export default new Service({
     on: async function (request, checkUser, SendSuccess, SendError) {
         try {
             const user = await checkUser(request.body.session);
-            user.catch(err => {
-                return SendError(403, err.message);
-            });
 
             let res = await Redis.get('methods:' + this.type);
             const { startperiod, endperiod } = request.query;

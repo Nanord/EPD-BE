@@ -79,9 +79,11 @@ class Service {
                     },
                     error => {
                         Logger.methods().warning("user unchecked");
-                        SendError.bind(1000, error.message);
+                        SendError.bind(403, error.message);
                     }
-                );
+                ).catch(err => {
+                    SendError.bind(403, err.message)
+                });
             } else {
                 return user;
             }

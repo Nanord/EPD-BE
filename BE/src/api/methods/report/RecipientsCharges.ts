@@ -6,15 +6,12 @@ import Redis from "../../../utils/Redis";
 
 
 export default new Service({
-    name: "RecipientsList",
+    name: "RecipientsCharges",
     description: "1.Получение отчета по начислениям: 1.1. Список получателей",
     type: 1,
     on: async function (request, checkUser, SendSuccess, SendError) {
         try {
             const user = await checkUser(request.session);
-            user.catch(err => {
-               return SendError(403, err.message);
-            });
 
             let res = await Redis.get('methods:' + this.type);
             const { startperiod, endperiod } = request;

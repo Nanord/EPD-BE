@@ -15,7 +15,7 @@ namespace User {
         //FUCK
         if (process.env.SMORODINA_EPD_FAKEID === "true") {
             Logger.access().log("Debug session");
-            return require('../../../__debugUserInfo').default;
+            return require('../__debugUserInfo').default;
         }
         let user = await Redis.get("user:" + session);
         if (user) {
