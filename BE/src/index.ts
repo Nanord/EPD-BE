@@ -96,10 +96,3 @@ Socket.start(server);
  * Приветсвие
  */
 console.log(`LISTEN 7676`);
-//For pm2
-process.on('SIGINT', function() {
-    server.stop();
-    Socket.wsServer.closeAllConnections();
-    Redis.client.quit();
-    Logger.warning("pm2 sending close signal")
-});
