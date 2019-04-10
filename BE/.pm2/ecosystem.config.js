@@ -39,10 +39,10 @@ module.exports = {
     },
 
     //Logs
-    merge_logs: true,
-    log_date_format: "YYYY-MM-DD HH:mm Z",
-    error_file: "./logs/error.log",
-    out_file: "./logs/work.log"
+    // merge_logs: true,
+    // log_date_format: "YYYY-MM-DD HH:mm Z",
+    // error_file: "./logs/error.log",
+    // out_file: "./logs/work.log"
   }],
 
  /* deploy : {
