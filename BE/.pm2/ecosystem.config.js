@@ -11,7 +11,7 @@ module.exports = {
     interpreter: "node",
     interpreter_args: "",
     //process settings
-    autorestart: false,
+    autorestart: true,
     watch: true,
     exec_mode: "fork",
     max_memory_restart: '1G',

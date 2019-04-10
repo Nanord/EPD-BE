@@ -97,8 +97,6 @@ Socket.start(server);
  */
 console.log(`LISTEN 7676`);
 //For pm2
-// @ts-ignore
-process.send("ready");
 process.on('SIGINT', function() {
     server.stop();
     Socket.wsServer.closeAllConnections();
