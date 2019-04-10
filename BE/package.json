@@ -5,7 +5,6 @@
   "main": "index",
   "scripts": {
     "start": "ts-node ./src/index.ts --trace-sync-io",
-    "start_pm2": "npx typescript --build && pm2 start ./.pm2/ecosystem.config.js --no-daemon",
     "start_dist": "node ./dist/index.js",
     "build-BE": "npx typescript --build"
   },
