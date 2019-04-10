@@ -5,14 +5,13 @@ import Redis from "../../../utils/Redis";
 
 
 export default new Service({
-    name: "PayingAgents",
+    name: "Receipt",
     description: "3.Мониторинг принятых оплат 3.4 Запрос части списка квитанций, привязанных к реестру",
-    type: 6,
     on: async function (request, checkUser, SendSuccess, SendError) {
         try {
             const user = await checkUser(request.session);
 
-            let res = await Redis.get('methods:' + this.type);
+            let res = await Redis.get('methods:7');
             const { startperiod, endperiod } = request;
             if(!res) {
                 /*res = await Sod.performQuery(
@@ -24,7 +23,7 @@ export default new Service({
                     }
                 );*/
                 res = {
-                    reqtype: this.type,
+                    reqtype: 7,
                     listtotal: 2,
                     listpartid: 1,
                     listcount: 2,
@@ -43,7 +42,7 @@ export default new Service({
                         }
                     ]
                 };
-                Redis.setex('methods:' + this.type, JSON.stringify(res));
+                Redis.setex('methods:7', JSON.stringify(res));
             }
             res = JSON.stringify(res);
             Logger.methods().log(this.name + ": \n\t\t\t\t\t res: " + res);

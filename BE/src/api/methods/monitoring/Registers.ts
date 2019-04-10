@@ -7,12 +7,11 @@ import Redis from "../../../utils/Redis";
 export default new Service({
     name: "PayingAgents",
     description: "3.Мониторинг принятых оплат 3.3 Запрос части списка реестров за период",
-    type: 5,
     on: async function (request, checkUser, SendSuccess, SendError) {
         try {
             const user = await checkUser(request.body.session);
 
-            let res = await Redis.get('methods:' + this.type);
+            let res = await Redis.get('methods:6');
             const { startperiod, endperiod } = request.query;
             if(!res) {
                 /*res = await Sod.performQuery(
@@ -24,7 +23,7 @@ export default new Service({
                     }
                 );*/
                 res = {
-                    reqtype: this.type,
+                    reqtype: 6,
                     listtotal: 2,
                     listpartid: 1,
                     listcount: 2,
@@ -39,7 +38,7 @@ export default new Service({
                         }
                     ]
                 };
-                Redis.setex('methods:' + this.type, JSON.stringify(res));
+                Redis.setex('methods:6', JSON.stringify(res));
             }
             res = JSON.stringify(res);
             Logger.methods().log(this.name + ": \n\t\t\t\t\t res: " + res);

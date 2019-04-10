@@ -7,12 +7,11 @@ import Redis from "../../../utils/Redis";
 export default new Service({
     name: "PayingAgents",
     description: "4.Получение баланса по ЕЛС 4.2 Запрос списка услуг по поставщику для заданного ЕЛС",
-    type: 8,
     on: async function (request, checkUser, SendSuccess, SendError) {
         try {
             const user = await checkUser(request.session);
 
-            let res = await Redis.get('methods:' + this.type);
+            let res = await Redis.get('methods:9');
             const { els, providerid, listpartid, listcount } = request;
             if(!res) {
                 /*res = await Sod.performQuery(
@@ -26,7 +25,7 @@ export default new Service({
                     }
                 );*/
                 res = {
-                    reqtype: this.type,
+                    reqtype: 9,
                     acceptorid: 2,
                     acts: [
                         {
@@ -43,7 +42,7 @@ export default new Service({
                         }
                     ]
                 };
-                Redis.setex('methods:' + this.type, JSON.stringify(res));
+                Redis.setex('methods:9', JSON.stringify(res));
             }
             res = JSON.stringify(res);
             Logger.methods().log(this.name + ": \n\t\t\t\t\t res: " + res);

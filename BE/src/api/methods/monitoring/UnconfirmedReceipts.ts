@@ -7,12 +7,11 @@ import Redis from "../../../utils/Redis";
 export default new Service({
     name: "PayingAgents",
     description: "3.Мониторинг принятых оплат 3.2 Запрос части списка неподтвержденных квитанций за период",
-    type: 5,
     on: async function (request, checkUser, SendSuccess, SendError) {
         try {
             const user = await checkUser(request.session);
 
-            let res = await Redis.get('methods:' + this.type);
+            let res = await Redis.get('methods:5');
             const { startperiod, endperiod } = request;
             if(!res) {
                 /*res = await Sod.performQuery(
@@ -24,19 +23,25 @@ export default new Service({
                     }
                 );*/
                 res = {
-                    reqtype: 4,
-                    agents: [
+                    reqtype: 5,
+                    listpartid: 1,
+                    listcount: 2,
+                    invoices: [
                         {
-                            id: 1,
-                            name: "СМОРОДИНА",
+                            invid: 1,
+                            els: 999,
+                            summ: 100000,
+                            date: startperiod,
                         },
                         {
-                            id: 2,
-                            name: "Нижегородский Государственный Технический Университет",
+                            invid: 2,
+                            els: 9999,
+                            summ: 1000000,
+                            date: endperiod,
                         }
                     ]
                 };
-                Redis.setex('methods:' + this.type, JSON.stringify(res));
+                Redis.setex('methods:5', JSON.stringify(res));
             }
             res = JSON.stringify(res);
             Logger.methods().log(this.name + ": \n\t\t\t\t\t res: " + res);

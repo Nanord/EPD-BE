@@ -54,7 +54,7 @@ class Redis {
     promisify(method: Function, args: any): Promise<any> {
         Logger.db().log("redis.method: " + method.name + " arg: " + Object.values(args));
         return new Promise<any>((resolve, reject) => {
-            method.apply(this.client, [... Object.values(args), (err, data) => {
+            method.apply(this.client, [...Object.values(args), (err, data) => {
                 if (!err) {
                     Logger.db().log(method.name + " successful: " + data);
                     return resolve(data);
@@ -90,8 +90,15 @@ class Redis {
      * @param value Значение ключа
      * @param ttl Время жизни ключа (в секундах)
      */
-    public setex(key: string, value: string , ttl: number=Number(process.env.SMORODINA_EPD_REDIS_TTL)) {
-        return this.promisify(this.client.SETEX, arguments);
+    public setex(key: string, value: string, ttl: number=Number(process.env.SMORODINA_EPD_REDIS_TTL)) {
+        let arg;
+        arg = Object.values(arguments);
+        if(arguments.length < 3) {
+            arg.splice(1, 0, ttl);
+        } else {
+            [arg[1], arg[2]] = [arg[2], arg[1]];
+        }
+        return this.promisify(this.client.SETEX, arg);
     }
 
     /**
