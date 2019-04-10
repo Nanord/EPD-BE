@@ -11,7 +11,6 @@
   "author": "Borisov Alexandr",
   "license": "ISC",
   "dependencies": {
-    "pm2": "^3.5.0",
     "nodemon": "^1.18.10",
     "redis": "^2.8.0",
     "@types/compression": "^0.0.36",

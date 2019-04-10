@@ -82,7 +82,7 @@ app.use((err, req, res, next) => {
 
 const server = require('http').Server(app);
 
-server.listen(7677);
+server.listen(7676);
 //server.listen(process.env.SMORODINA_MOD_EPD_PORT);
 
 

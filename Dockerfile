@@ -23,6 +23,7 @@ RUN apt-get update
 
 ADD . /app
 WORKDIR /app
+RUN yarn global add pm2
 RUN cd /app && yarn install
 
 CMD ["yarn", "start_pm2"]
