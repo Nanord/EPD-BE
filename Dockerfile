@@ -1,4 +1,4 @@
-FROM node:carbon
+FROM keymetrics/pm2:latest-alpine
 
 # Создать директорию app
 WORKDIR /app
