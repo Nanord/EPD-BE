@@ -16,9 +16,8 @@ class Redis {
     /**
      * Адрес сервера redis
      */
-    //host: string = process.env.SMORODINA_MOD_LKADMIN_REDIS_HOST || "127.0.0.1";
-    host: string = "redis";
-    port: number = 6379;
+    host: string = process.env.SMORODINA_EPD_REDIS_HOST || "redis";
+    port: number = Number(process.env.SMORODINA_EPD_REDIS_PORT) || 6379;
 
     /**
      * Клиент
@@ -91,7 +90,7 @@ class Redis {
      * @param value Значение ключа
      * @param ttl Время жизни ключа (в секундах)
      */
-    public setex(key: string, ttl: number, value: string) {
+    public setex(key: string, value: string , ttl: number=Number(process.env.SMORODINA_EPD_REDIS_TTL)) {
         return this.promisify(this.client.SETEX, arguments);
     }
 

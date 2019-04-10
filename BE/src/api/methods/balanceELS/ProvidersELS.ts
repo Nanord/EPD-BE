@@ -11,6 +11,10 @@ export default new Service({
     on: async function (request, checkUser, SendSuccess, SendError) {
         try {
             const user = await checkUser(request.session);
+            user.catch(err => {
+                return SendError(403, err.message);
+            });
+
             let res = await Redis.get('methods:' + this.type);
             const { els, startperiod, endperiod } = request;
             if(!res) {
@@ -35,7 +39,7 @@ export default new Service({
                         }
                     ]
                 };
-                Redis.setex('methods:' + this.type, 3600, JSON.stringify(res));
+                Redis.setex('methods:' + this.type, JSON.stringify(res));
             }
             res = JSON.stringify(res);
             Logger.methods().log(this.name + ": \n\t\t\t\t\t res: " + res);

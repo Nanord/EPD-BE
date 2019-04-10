@@ -27,7 +27,7 @@ app.use((req, res, next) => {
     res.header("x-powered-by", "SMORODINA");
     //FUCK
     res.header("Access-Control-Allow-Origin", "*");
-   //res.header("Access-Control-Allow-Origin", process.env.SMORODINA_ALLOW_ORIGIN);
+   res.header("Access-Control-Allow-Origin", process.env.SMORODINA_ALLOW_ORIGIN);
     res.header("Access-Control-Allow-Methods", "GET,POST");
     res.header("Access-Control-Allow-Headers", "Content-Type");
 
@@ -45,10 +45,10 @@ app.post("/api/:method", (req, res) => {
     Logger.log("/api/" + req.params.method);
     res.set('Content-Type', 'application/json; charset=utf-8');
 
-    let result = { ok: false, code: 1000, message: "Sorry but no..." };
+    let result = { message: "Method not fond" };
     const Method = Methods[req.params.method.toLowerCase()] as Service;
     if (!Method) {
-        res.status(200).send(result);
+        res.status(404).send(result);
         return;
     }
 
@@ -82,8 +82,7 @@ app.use((err, req, res, next) => {
 
 const server = require('http').Server(app);
 
-server.listen(7676);
-//server.listen(process.env.SMORODINA_MOD_EPD_PORT);
+server.listen(process.env.SMORODINA_MOD_EPD_PORT);
 
 
 /**
@@ -95,4 +94,4 @@ Socket.start(server);
 /**
  * Приветсвие
  */
-console.log(`LISTEN 7676`);
+console.log(`LISTEN ${process.env.SMORODINA_MOD_EPD_PORT}`);

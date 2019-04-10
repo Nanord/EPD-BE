@@ -47,9 +47,7 @@ class Sod {
         if (needUnicode) {
             json = this.jsonEncode(json);
         }
-        //@ts-ignore
-        //const url = `http://${process.env.SMORODINA_SOD_SERVER_HOST}:${process.env.SMORODINA_SOD_SERVER_PORT}/${process.env.SMORODINA_SOD_SERVER_PATH}`;
-        const url = `https://xn--e1aaobnafwhcg.xn--80ahmohdapg.xn--80asehdb/sod/SOD`;
+        const url = process.env.SMORODINA_SOD_SERVER_HOST;
 
         return new Promise((resolve, reject) => {
             axios({

@@ -17,31 +17,9 @@ export default new Service({
                 res = await Sod.performQuery(
                     "AAA_TEST_SELECT_ALL",
                     {
-                        // reqtype: request.reqtype || null,
-                        // acceptorid: request.acceptorid || null,
-                        // listpartid: request.listpartid || null,
-                        // listcount: request.listcount || null,
                     }
                 );
-                /*res = {
-                    reqtype: 2,
-                    acceptorid: request.acceptorid,
-                    providers: [
-                        {
-                            id: "FUCk",
-                            name: "string",
-                            summ: "number",
-                            fcount: "number",
-                        },
-                        {
-                            id: "number2",
-                            name: "string2",
-                            summ: "number2",
-                            fcount: "number2",
-                        }
-                    ]
-                };*/
-                Redis.setex('methods:test', 3600, JSON.stringify(res));
+                Redis.setex('methods:test', JSON.stringify(res));
             }
             res = JSON.stringify(res);
             Logger.methods().log(this.name + ": \n\t\t\tres:" + res);
@@ -49,7 +27,7 @@ export default new Service({
 
         } catch (error) {
             Logger.methods().error(this.name + ": " + error.message + " " + error.err);
-            return SendError(100, error.err);
+            return SendError(500, error.err);
         }
     }
 });

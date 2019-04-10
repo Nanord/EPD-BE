@@ -1,5 +1,4 @@
 import moment from 'moment';
-import $ from '../DataBase';
 import Socket from '../../api/Socket';
 import {type} from "os";
 import LogDB from "./LogDB";
@@ -44,13 +43,13 @@ class Logger {
     }
 
     static message(message: string): void {
-        if(true) {
+        if(process.env.DEBUG === 'true') {
             Logger.getInstance().print(message, LogTypes.MESSAGE);
         }
     }
 
     static log(message: string): void {
-        if(true) {
+        if(process.env.DEBUG === 'true') {
             Logger.message(message);
         }
     }
@@ -60,39 +59,44 @@ class Logger {
     }
 
     static warning(message: string): void {
-        if(true) {
+        if(process.env.LOG_WARNING === 'true') {
             Logger.getInstance().print(message, LogTypes.WARNING);
         }
     }
 
     static db() {
-        if(true) {
+        if(process.env.LOG_DB === 'true') {
             return LogDB;
         }
+        return Logger
     }
 
     static access() {
-        if(true) {
+        if(process.env.LOG_ACCESS === 'true') {
             return LogAccess;
         }
+        return Logger
     }
 
     static sod() {
-        if(true) {
+        if(process.env.LOG_SOD === 'true') {
             return LogSod;
         }
+        return Logger
     }
 
     static methods() {
-        if(true) {
+        if(process.env.LOG_METHODS === 'true') {
             return LogMethods;
         }
+        return Logger
     }
 
     static ws() {
-        if(true) {
+        if(process.env.LOG_WS === 'true') {
             return LogWS;
         }
+        return Logger
     }
 }
 export default Logger;

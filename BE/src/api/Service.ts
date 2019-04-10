@@ -71,10 +71,10 @@ class Service {
                 user.then(
                     result => {
                         Logger.methods().log("user checked" + result.data);
-                        if (!result.isSuperuser) {
-                            Logger.methods().warning("user not superuser");
-                            SendError.bind(1001);
-                        }
+                        // if (!result.isSuperuser) {
+                        //     Logger.methods().warning("user not superuser");
+                        //     SendError.bind(1001);
+                        // }
                         return user;
                     },
                     error => {

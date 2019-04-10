@@ -19,27 +19,65 @@ module.exports = {
     listen_timeout : 1000,
 
     env: {
-      NODE_ENV: 'development',
-      //BE general config
-      SMORODINA_ALLOW_ORIGIN: string = "*",
+        NODE_ENV: 'development',
 
-      //BE config
-      SMORODINA_MOD_EPD_PORT: string = "7676",
-      SMORODINA_MOD_EPD_FAKEID: string = "true",
+        //BE general config",
+        SMORODINA_ALLOW_ORIGIN: string = "*",
+        DEBUG: string = "true",
+        LOG_WARNING: string = "true",
+        LOG_DB: string = "true",
+        LOG_ACCESS: string = "true",
+        LOG_SOD: string = "true",
+        LOG_METHODS: string = "true",
+        LOG_WS: string = "true",
 
-      //BE sod config
-      SMORODINA_MOD_EPD_SOD_ENDPOINT: string = "http://172.16.200.193:8077/SOD",
+        //BE config
+        SMORODINA_EPD_PORT: string = "7676",
+        SMORODINA_EPD_FAKEID: string = "true",
 
-      //BE Access config
-      SMORODINA_ACCESS_SERVER_HOST: string = "172.16.200.193",
-      SMORODINA_ACCESS_SERVER_PORT: string = "8050",
+        //BE sod config
+        SMORODINA_MOD_EPD_SOD_ENDPOINT: string = "https://xn--e1aaobnafwhcg.xn--80ahmohdapg.xn--80asehdb/sod/SOD",
+
+        //BE Access config
+        SMORODINA_ACCESS_SERVER_HOST: string = "https://xn--e1aaobnafwhcg.xn--80ahmohdapg.xn--80asehdb/access/",
+        SMORODINA_ACCESS_SERVER_PORT: string = "8050",
+
+        //BE redis
+        SMORODINA_EPD_REDIS_HOST: string = "redis",
+        SMORODINA_EPD_REDIS_PORT: string = "6379",
+        SMORODINA_EPD_REDIS_TTL: string = "3600"
     },
     env_production: {
-      NODE_ENV: 'production'
+        NODE_ENV: 'production',
+
+        SMORODINA_ALLOW_ORIGIN: string = "*",
+        DEBUG: string = "false",
+        LOG_WARNING: string = "true",
+        LOG_DB: string = "false",
+        LOG_ACCESS: string = "false",
+        LOG_SOD: string = "false",
+        LOG_METHODS: string = "false",
+        LOG_WS: string = "false",
+
+        //BE config
+        SMORODINA_EPD_PORT: string = "7676",
+        SMORODINA_EPD_FAKEID: string = "true",
+
+        //BE sod config
+        SMORODINA_MOD_EPD_SOD_ENDPOINT: string = "https://xn--e1aaobnafwhcg.xn--80ahmohdapg.xn--80asehdb/sod/SOD",
+
+        //BE Access config
+        SMORODINA_ACCESS_SERVER_HOST: string = "https://xn--e1aaobnafwhcg.xn--80ahmohdapg.xn--80asehdb/access/",
+        SMORODINA_ACCESS_SERVER_PORT: string = "8050",
+
+        //BE redis
+        SMORODINA_EPD_REDIS_HOST: string = "redis",
+        SMORODINA_EPD_REDIS_PORT: string = "6379",
+        SMORODINA_EPD_REDIS_TTL: string = "3600"
     },
 
     //Logs
-    merge_logs: true,
+    merge_logs: false,
     log_date_format: "YYYY-MM-DD HH:mm Z",
     error_file: ".pm2/logs/error.log",
     out_file: ".pm2/logs/work.log"
