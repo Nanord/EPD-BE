@@ -2,7 +2,7 @@ module.exports = {
   apps : [{
     name: 'API',
     //Main Script
-    script: 'dist/index.js',
+    script: './BE/dist/index.js',
     //Args for run
     args: '',
     //count cluster
