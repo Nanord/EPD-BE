@@ -8,7 +8,6 @@ MAINTAINER Nanord nanord2@yandex.ru
 RUN apt-get update
 
 ADD ./ /app
-COPY ./dist /app
 COPY ./src /app
 COPY ./.pm2 /app
 
