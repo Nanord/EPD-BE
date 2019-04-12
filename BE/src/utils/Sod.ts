@@ -42,7 +42,7 @@ class Sod {
             throw ("Параметры функции должны быть опеределены");
         }
         const requestObject = { name, org, params, out_params };
-        Logger.sod().log("req: " + requestObject.name);
+        Logger.log("SOD: " + "req: " + requestObject.name);
         let json = JSON.stringify(requestObject);
         if (needUnicode) {
             json = this.jsonEncode(json);
@@ -70,7 +70,7 @@ class Sod {
                 if (res.data.result.code == "1004") {
                     resolve(res.data.contents as any[]);
                 } else {
-                    Logger.sod().error(`SOD !! (${res.data.result.code}) ${res.data.result.message}`);
+                    Logger.error("SOD: " +`SOD !! (${res.data.result.code}) ${res.data.result.message}`);
                     reject({
                         err: res.data.result.message,
                         message: "Ошибка работы с СОД"
@@ -79,10 +79,10 @@ class Sod {
             }).catch((error) => {
                 //@ts-ignore
                 if (error.message) {
-                    Logger.sod().error(`!!${error.message}`);
+                    Logger.error("SOD: " + `!!${error.message}`);
                 }
                 else {
-                    Logger.sod().error(`!!${error.toString()}`);
+                    Logger.error("SOD: " + `!!${error.toString()}`);
                 }
                 reject({
                     err: error.message,

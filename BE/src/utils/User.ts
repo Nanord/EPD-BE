@@ -6,36 +6,36 @@ import Redis from "./Redis";
 namespace User {
 
     export async function check(session: string) {
-        Logger.access().log("check user: " + session);
+        Logger.log("ACCESS: " + "check user: " + session);
         if (!session && typeof session === 'undefined') {
             let msg = "Incorrect Session";
-            Logger.access().warning(msg);
+            Logger.warning("ACCESS: " + msg);
             throw new Error(msg);
         }
         //FUCK
         if (process.env.SMORODINA_EPD_FAKEID === "true") {
-            Logger.access().log("Debug session");
+            Logger.log("ACCESS: " + "Debug session");
             return require('../__debugUserInfo').default;
         }
         let user = await Redis.get("user:" + session);
         if (user) {
-            Logger.access().log("User found in DB" + user.data);
+            Logger.log("ACCESS: " + "User found in DB" + user.data);
             return user;
         }
 
         let url = '';
         url = process.env.SMORODINA_ACCESS_SERVER_HOST + 'check?session=' + session;
-        Logger.access().log("Request to " + url);
+        Logger.log("ACCESS: " + "Request to " + url);
         return new Promise((resolve, reject) => {
             axios({
                 method: 'GET',
                 url,
                 timeout: 3000
             }).then(response => {
-                Logger.access().log("response is successful");
+                Logger.log("ACCESS: " + "response is successful");
                 const data = response.data;
                 if (typeof data === "object") {
-                    Logger.access().log("res: " + data.ok + " " + data.result);
+                    Logger.log("ACCESS: " + "res: " + data.ok + " " + data.result);
                     if (data.ok == true) {
                         const user = {
                             ...data.result,
@@ -45,21 +45,21 @@ namespace User {
                         resolve(user)
                     } else {
                         let msg = "User not found";
-                        Logger.access().warning(msg);
+                        Logger.warning("ACCESS: " + msg);
                         reject(msg)
                     }
                 } else {
                     let msg = "Error occured while user session check";
-                    Logger.access().error(msg);
+                    Logger.error("ACCESS: " + msg);
                     reject(msg);
                 }
             }).catch(error =>{
                 if (error.message) {
-                    Logger.access().error(error.message);
+                    Logger.error("ACCESS: " + error.message);
                     reject(error.message);
                 }
                 else {
-                    Logger.access().error(error.toString());
+                    Logger.error("ACCESS: " + error.toString());
                     reject(error);
                 }
             })

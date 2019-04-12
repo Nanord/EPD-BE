@@ -34,7 +34,7 @@ class WS {
                 });
 
             } catch (error) {
-                console.log(error + "\n" + error.stack);
+                Logger.error("WS: " + error + "\n" + error.stack);
             }
         });
     }
@@ -45,7 +45,7 @@ class WS {
 
     onMessage(data, connection) {
         //on data recieved
-        Logger.ws().log(".onMessage: " + data.toString())
+        Logger.log("WS: .onMessage: " + data.toString())
     }
 
     attachUser(connection: connection, user: any) {
@@ -55,10 +55,10 @@ class WS {
 
     sendMessageByMatch(message: string, matcher: (user, socket) => boolean) {
         //FUCK
-        Logger.ws().log("точно отправил " + message + "\n\t" + this.SOCKETS.length);
+        Logger.log("WS: точно отправил " + message + "\n\t" + this.SOCKETS.length);
         this.SOCKETS
             .forEach(function (socket) {
-                Logger.ws().log("Адресс " + socket.remoteAddress + "\n")
+                Logger.log("WS: Адресс " + socket.remoteAddress + "\n")
             });
         if (this.hasClientsConnected()) {
             this.SOCKETS

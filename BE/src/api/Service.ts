@@ -70,15 +70,15 @@ class Service {
             if(typeof user === "function") {
                 user.then(
                     result => {
-                        Logger.methods().log("user checked" + result.data);
+                        Logger.log("SERVICE: " + "user checked" + result.data);
                         // if (!result.isSuperuser) {
-                        //     Logger.methods().warning("user not superuser");
+                        //     Logger.warning("user not superuser");
                         //     SendError.bind(1001);
                         // }
                         return user;
                     },
                     error => {
-                        Logger.methods().warning("user unchecked");
+                        Logger.warning("SERVICE: " + "user unchecked");
                         SendError.bind(403, error.message);
                     }
                 ).catch(err => {

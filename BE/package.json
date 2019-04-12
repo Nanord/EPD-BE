@@ -11,9 +11,6 @@
   "author": "Borisov Alexandr",
   "license": "ISC",
   "dependencies": {
-    "log4js": "^4.1.0",
-    "nodemon": "^1.18.10",
-    "redis": "^2.8.0",
     "@types/compression": "^0.0.36",
     "@types/js-yaml": "^3.11.2",
     "@types/moment": "^2.13.0",
@@ -31,6 +28,8 @@
     "node-cache": "^4.2.0",
     "node-cache-promise": "^1.0.0",
     "node-orangedata": "^1.0.7",
+    "nodemon": "^1.18.10",
+    "redis": "^2.8.0",
     "source-map-loader": "^0.2.3",
     "ts-node": "^7.0.0",
     "typescript": "^2.9.2",

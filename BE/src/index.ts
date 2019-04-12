@@ -1,10 +1,14 @@
 require('dotenv').config();
 
 import * as Methods from './api';
+import * as ReportMethods from './api/methods/report';
+import * as MonitoringMethods from './api/methods/monitoring';
+import * as BalanceELSMethods from './api/methods/balanceELS';
+
 import Service from './api/Service';
 import Socket from './api/Socket';
 import compression, { filter } from 'compression';
-import express from 'express';
+import express, {response} from 'express';
 import bodyParser from 'body-parser';
 import {router} from "websocket";
 import path from 'path'
@@ -25,9 +29,8 @@ const app = express();
 
 app.use((req, res, next) => {
     res.header("x-powered-by", "SMORODINA");
-    //FUCK
     res.header("Access-Control-Allow-Origin", "*");
-   res.header("Access-Control-Allow-Origin", process.env.SMORODINA_ALLOW_ORIGIN);
+    res.header("Access-Control-Allow-Origin", process.env.SMORODINA_ALLOW_ORIGIN);
     res.header("Access-Control-Allow-Methods", "GET,POST");
     res.header("Access-Control-Allow-Headers", "Content-Type");
 
@@ -62,6 +65,54 @@ app.post("/api/:method", (req, res) => {
     // }
 });
 
+/**
+ * REPORT
+ */
+app.post("/api/report/:method", (req, res) => {
+   Logger.log("/api/report/" + req.params.method);
+   res.set('Content-Type\', \'application/json; charset=utf-8');
+
+   let result = { message: "Method not found" };
+   const ReportMethod = ReportMethods[req.params.method.toLowerCase()] as Service;
+   if(!ReportMethod) {
+       res.status(404).send(result);
+   }
+
+   ReportMethod.executor(req.body, (response: any) => res.status(200).send(response));
+});
+
+/**
+ * MONITORING
+ */
+app.post("/api/monitoring/:method", (req, res) => {
+    Logger.log("/api/report/" + req.params.method);
+    res.set('Content-Type\', \'application/json; charset=utf-8');
+
+    let result = { message: "Method not found" };
+    const MonitoringMethod = MonitoringMethods[req.params.method.toLowerCase()] as Service;
+    if(!MonitoringMethod) {
+        res.status(404).send(result);
+    }
+
+    MonitoringMethod.executor(req.body, (response: any) => res.status(200).send(response));
+});
+
+/**
+ * BALANCE_ELS
+ */
+app.post("/api/balance/:method", (req, res) => {
+    Logger.log("/api/report/" + req.params.method);
+    res.set('Content-Type\', \'application/json; charset=utf-8');
+
+    let result = { message: "Method not found" };
+    const BalanceELSMethod = BalanceELSMethods[req.params.method.toLowerCase()] as Service;
+    if(!BalanceELSMethod) {
+        res.status(404).send(result);
+    }
+
+    BalanceELSMethod.executor(req.body, (response: any) => res.status(200).send(response));
+});
+
 app.all("/ok", (req, res) => res.send("OK"));
 
 app.use((req, res, next) => {
@@ -71,6 +122,7 @@ app.use((req, res, next) => {
     res.send({ error: 'Not found' });
     return;
 });
+
 
 app.use((err, req, res, next) => {
     res.status(err.status || 500);

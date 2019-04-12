@@ -26,9 +26,9 @@ class Redis {
 
     constructor() {
         this.client = redis.createClient({ port: this.port, host: this.host });
-        Logger.db().log("Connection to Redis successful!");
+        Logger.log("DB: " + "Connection to Redis successful!");
         this.client.on("error", (error) => {
-            Logger.db().error("Cannot connect to redis server" + error.message);
+            Logger.error("DB: " + "Cannot connect to redis server" + error.message);
         });
 
     }
@@ -41,7 +41,7 @@ class Redis {
     public subscribe(channels: string[], message: (channel: string, message: string) => void) {
         const subscribeClient = redis.createClient({ host: this.host });
         subscribeClient.on("error", (error) => {
-            Logger.db().error(`Cannot connect to redis server while subscribe [${error.message}]`);
+            Logger.error("DB: " + `Cannot connect to redis server while subscribe [${error.message}]`);
         });
         subscribeClient.on("ready", async () => {
             for (let i = 0; i < channels.length; i++) {
@@ -52,18 +52,18 @@ class Redis {
     }
 
     promisify(method: Function, args: any): Promise<any> {
-        Logger.db().log("redis.method: " + method.name + " arg: " + Object.values(args));
+        Logger.log("DB: " +"redis.method: " + method.name + " arg: " + Object.values(args));
         return new Promise<any>((resolve, reject) => {
             method.apply(this.client, [...Object.values(args), (err, data) => {
                 if (!err) {
-                    Logger.db().log(method.name + " successful: " + data);
+                    Logger.log("DB: " + method.name + " successful: " + data);
                     return resolve(data);
                 }
-                Logger.db().warning(method.name + " unsuccessful");
+                Logger.warning("DB: " + method.name + " unsuccessful");
                 return reject(err.message);
             }]);
         }).catch(err=> {
-            Logger.db().error("Redis error promise " + err.toString())
+            Logger.error("DB: " + "Redis error promise " + err.toString())
         });
     }
 

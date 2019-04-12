@@ -7,11 +7,7 @@ MAINTAINER Nanord nanord2@yandex.ru
 
 RUN apt-get update
 
-ADD ./package.json /app
-ADD ./BE/package.json /app/BE
-ADD ./BE/dist /app/BE
-ADD ./BE/meta.json /app/BE
-ADD ./BE/tsconfig.json /app/BE
+ADD * /app
 
 WORKDIR /app
 RUN yarn global add pm2

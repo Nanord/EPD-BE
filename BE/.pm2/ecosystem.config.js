@@ -24,12 +24,6 @@ module.exports = {
         //BE general config",
         SMORODINA_ALLOW_ORIGIN: string = "*",
         DEBUG: string = "true",
-        LOG_WARNING: string = "true",
-        LOG_DB: string = "true",
-        LOG_ACCESS: string = "true",
-        LOG_SOD: string = "true",
-        LOG_METHODS: string = "true",
-        LOG_WS: string = "true",
 
         //BE config
         SMORODINA_EPD_PORT: string = "7676",
@@ -52,12 +46,6 @@ module.exports = {
 
         SMORODINA_ALLOW_ORIGIN: string = "*",
         DEBUG: string = "false",
-        LOG_WARNING: string = "true",
-        LOG_DB: string = "false",
-        LOG_ACCESS: string = "false",
-        LOG_SOD: string = "false",
-        LOG_METHODS: string = "false",
-        LOG_WS: string = "false",
 
         //BE config
         SMORODINA_EPD_PORT: string = "7676",
