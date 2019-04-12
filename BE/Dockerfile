@@ -1,4 +1,4 @@
-FROM keymetrics/pm2:latest-stretch
+FROM node:carbon
 
 # Создать директорию app
 WORKDIR /app
