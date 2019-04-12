@@ -8,7 +8,7 @@ services:
       - "6379:6379"
 
   epd-be:
-    build: ./
-    restart: on-failure
+    build: ./BE
+    restart: always
     ports:
       - "7676:7676"
