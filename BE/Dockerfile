@@ -8,6 +8,9 @@ MAINTAINER Nanord nanord2@yandex.ru
 RUN apt-get update
 
 ADD ./ /app
+ADD ./dist /app
+ADD ./src /app
+ADD ./.pm2 /app
 
 WORKDIR /app
 RUN yarn global add pm2
