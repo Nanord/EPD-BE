@@ -13,7 +13,6 @@ COPY ./.pm2 /app
 
 WORKDIR /app
 RUN yarn global add pm2
-RUN yarn build-BE
 RUN cd /app && yarn install
 
 CMD ["yarn", "start_pm2_docker"]
