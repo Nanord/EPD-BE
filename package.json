@@ -3,7 +3,6 @@
     "author": "Borisov Alexandr",
     "scripts": {
         "start_pm2": "pm2 kill && cd ./BE && npx typescript --build && pm2 start ./.pm2/ecosystem.config.js --no-daemon",
-        "start_pm2_docker": "pm2 start ./.pm2/ecosystem.config.js --no-daemon",
         "start": "ts-node %NODE_DEBUG_OPTION% ./BE/src/index.ts --arguments",
         "build-BE": "npx typescript --build ./BE",
         "clear": "rm -rf ./node_modules && rm -rf ./BE/node_modules ",

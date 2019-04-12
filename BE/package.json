@@ -4,6 +4,7 @@
   "description": "Шлюз для онлайн касс",
   "main": "index",
   "scripts": {
+    "start_pm2_docker": "pm2 start ./.pm2/ecosystem.config.js --no-daemon",
     "start": "ts-node ./src/index.ts --trace-sync-io",
     "start_dist": "node ./dist/index.js",
     "build-BE": "npx typescript --build"
