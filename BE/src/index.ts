@@ -116,21 +116,21 @@ app.post("/api/balance/:method", (req, res) => {
 
 app.all("/ok", (req, res) => res.send("OK"));
 
-app.use((req, res, next) => {
-    res.status(404);
-    Logger.log('Not found URL: ' + req.url);
-    res.status(404);
-    res.send({ error: 'Not found' });
-    return;
-});
-
-
-app.use((err, req, res, next) => {
-    res.status(err.status || 500);
-    Logger.error('Internal error(' + 500 + ") " + err.message);
-    res.send({ error: err.message });
-    return;
-});
+// app.use((req, res, next) => {
+//     res.status(404);
+//     Logger.log('Not found URL: ' + req.url);
+//     res.status(404);
+//     res.send({ error: 'Not found' });
+//     return;
+// });
+//
+//
+// app.use((err, req, res, next) => {
+//     res.status(err.status || 500);
+//     Logger.error('Internal error(' + 500 + ") " + err.message);
+//     res.send({ error: err.message });
+//     return;
+// });
 
 
 const server = require('http').Server(app);
