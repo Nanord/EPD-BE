@@ -65,54 +65,54 @@ app.post("/api/:method", (req, res) => {
     // }
 });
 
-/**
- * REPORT
- */
-app.post("/api/report/:method", (req, res) => {
-   Logger.log("/api/report/" + req.params.method);
-   res.set('Content-Type\', \'application/json; charset=utf-8');
+// /**
+//  * REPORT
+//  */
+// app.post("/api/report/:method", (req, res) => {
+//    Logger.log("/api/report/" + req.params.method);
+//    res.set('Content-Type\', \'application/json; charset=utf-8');
 
-   let result = { message: "Method not found" };
-   const ReportMethod = ReportMethods[req.params.method.toLowerCase()] as Service;
-   if(!ReportMethod) {
-       res.status(404).send(result);
-   }
+//    let result = { message: "Method not found" };
+//    const ReportMethod = ReportMethods[req.params.method.toLowerCase()] as Service;
+//    if(!ReportMethod) {
+//        res.status(404).send(result);
+//    }
 
-   ReportMethod.executor(req.body, (response: any) => res.status(200).send(response));
+//    ReportMethod.executor(req.body, (response: any) => res.status(200).send(response));
 
-});
+// });
 
-/**
- * MONITORING
- */
-app.post("/api/monitoring/:method", (req, res) => {
-    Logger.log("/api/report/" + req.params.method);
-    res.set('Content-Type\', \'application/json; charset=utf-8');
+// /**
+//  * MONITORING
+//  */
+// app.post("/api/monitoring/:method", (req, res) => {
+//     Logger.log("/api/report/" + req.params.method);
+//     res.set('Content-Type\', \'application/json; charset=utf-8');
 
-    let result = { message: "Method not found" };
-    const MonitoringMethod = MonitoringMethods[req.params.method.toLowerCase()] as Service;
-    if(!MonitoringMethod) {
-        res.status(404).send(result);
-    }
+//     let result = { message: "Method not found" };
+//     const MonitoringMethod = MonitoringMethods[req.params.method.toLowerCase()] as Service;
+//     if(!MonitoringMethod) {
+//         res.status(404).send(result);
+//     }
 
-    MonitoringMethod.executor(req.body, (response: any) => res.status(200).send(response));
-});
+//     MonitoringMethod.executor(req.body, (response: any) => res.status(200).send(response));
+// });
 
-/**
- * BALANCE_ELS
- */
-app.post("/api/balance/:method", (req, res) => {
-    Logger.log("/api/report/" + req.params.method);
-    res.set('Content-Type\', \'application/json; charset=utf-8');
+// /**
+//  * BALANCE_ELS
+//  */
+// app.post("/api/balance/:method", (req, res) => {
+//     Logger.log("/api/report/" + req.params.method);
+//     res.set('Content-Type\', \'application/json; charset=utf-8');
 
-    let result = { message: "Method not found" };
-    const BalanceELSMethod = BalanceELSMethods[req.params.method.toLowerCase()] as Service;
-    if(!BalanceELSMethod) {
-        res.status(404).send(result);
-    }
+//     let result = { message: "Method not found" };
+//     const BalanceELSMethod = BalanceELSMethods[req.params.method.toLowerCase()] as Service;
+//     if(!BalanceELSMethod) {
+//         res.status(404).send(result);
+//     }
 
-    BalanceELSMethod.executor(req.body, (response: any) => res.status(200).send(response));
-});
+//     BalanceELSMethod.executor(req.body, (response: any) => res.status(200).send(response));
+// });
 
 app.all("/ok", (req, res) => res.send("OK"));
 

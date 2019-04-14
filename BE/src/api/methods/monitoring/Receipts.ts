@@ -15,7 +15,7 @@ export default new Service({
             let { startperiod, endperiod } = request;
             let date = new Date();
             startperiod = startperiod ? startperiod :
-                date.getDate() + "." + Number(date.getMonth()) + "." + date.getFullYear();
+                date.getDate() + "." + Number(date.getMonth() + 1) + "." + date.getFullYear();
             endperiod = endperiod ? endperiod :
                 date.getDate() + "." + Number(date.getMonth() + 1) + "." + date.getFullYear();
 

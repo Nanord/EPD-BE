@@ -11,13 +11,10 @@ export default new Service({
     on: async function (request, checkUser, SendSuccess, SendError) {
         try {
             const user = await checkUser(request.session);
-
-            let { startperiod, endperiod } = request;
+        
             let date = new Date();
-            startperiod = startperiod ? startperiod :
-                date.getDate() + "." + Number(date.getMonth()) + "." + date.getFullYear();
-            endperiod = endperiod ? endperiod :
-                date.getDate() + "." + Number(date.getMonth() + 1) + "." + date.getFullYear();
+            let startperiod = date.getDate() + "." + Number(date.getMonth() + 1) + "." + date.getFullYear();
+            let endperiod = date.getDate() + "." + Number(date.getMonth() + 1) + "." + date.getFullYear();
 
             const redis_key = 'methods:6;' + startperiod + ":" + endperiod;
             let res = await Redis.get(redis_key);

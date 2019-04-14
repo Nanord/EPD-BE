@@ -34,16 +34,7 @@ export default new Service({
                 );*/
                 res = {
                     reqtype: 4,
-                    agents: [
-                        {
-                            id: 1,
-                            name: "СМОРОДИНА",
-                        },
-                        {
-                            id: 2,
-                            name: "Нижегородский Государственный Технический Университет",
-                        }
-                    ]
+                    agents: []
                 };
                 const fakerator = Fakerator();
                 for (let i = 1; i < 11; i++) {

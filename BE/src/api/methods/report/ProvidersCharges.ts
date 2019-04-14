@@ -39,7 +39,6 @@ export default new Service({
                     res.providers.push({
                         id: i,
                         name: fakerator.company.name(),
-                        provсount: fakerator.random.number(1, 10),
                         summ: fakerator.random.number(100, 10000),
                         fcount: fakerator.random.number(10, 100)
                     });
