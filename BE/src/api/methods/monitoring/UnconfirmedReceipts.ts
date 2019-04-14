@@ -37,8 +37,8 @@ export default new Service({
                 );*/
                 res = {
                     reqtype: 5,
-                    listpartid: 1,
-                    listcount: 11,
+                    listpartid: startid,
+                    listcount: count,
                     invoices: []
                 };
                 const fakerator = Fakerator();
@@ -54,8 +54,8 @@ export default new Service({
                 Redis.setex(redis_key, JSON.stringify(res));
             }
             res = JSON.stringify(res);
-            Logger.log("METHOD: " + this.name + ": \n\t\t\t\t\t res: " + res);
-            return SendSuccess(JSON.parse(res));
+            Logger.log("METHOD: " + this.name + ":  res: invoices.length = " + res.invoices.length);
+            return SendSuccess(JSON.parse(res));``
 
         } catch (error) {
             Logger.error("METHOD: " + this.name + ": " + error.message + " " + error.err);
