@@ -56,7 +56,7 @@ class Redis {
         return new Promise<any>((resolve, reject) => {
             method.apply(this.client, [...Object.values(args), (err, data) => {
                 if (!err) {
-                    Logger.log("DB: " + method.name + " successful: " + data);
+                    Logger.log("DB: " + method.name + " successful");
                     return resolve(data);
                 }
                 Logger.warning("DB: " + method.name + " unsuccessful");
