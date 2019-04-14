@@ -52,7 +52,7 @@ class Redis {
     }
 
     promisify(method: Function, args: any): Promise<any> {
-        Logger.log("DB: " +"redis.method: " + method.name + " arg: " + Object.values(args));
+        Logger.log("DB: " +"redis.method: " + method.name + " arg: " + Object.values(args)[0]);
         return new Promise<any>((resolve, reject) => {
             method.apply(this.client, [...Object.values(args), (err, data) => {
                 if (!err) {
