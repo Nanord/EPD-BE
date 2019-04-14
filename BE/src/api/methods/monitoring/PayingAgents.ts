@@ -22,7 +22,6 @@ export default new Service({
             const redis_key = 'methods:4;' + startperiod + ":" + endperiod;
             let res = await Redis.get(redis_key);
             res = JSON.parse(res);
-            res = JSON.parse(res);
             if(!res) {
                 /*res = await Sod.performQuery(
                     "123",
