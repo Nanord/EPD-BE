@@ -1,9 +1,6 @@
 require('dotenv').config();
 
 import * as Methods from './api';
-import * as ReportMethods from './api/methods/report';
-import * as MonitoringMethods from './api/methods/monitoring';
-import * as BalanceELSMethods from './api/methods/balanceELS';
 
 import Service from './api/Service';
 import Socket from './api/Socket';
