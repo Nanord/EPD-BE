@@ -12,14 +12,11 @@ export default new Service({
         try {
             const user = await checkUser(request.session);
 
-            let { startperiod, endperiod } = request;
-            let date = new Date();
-            startperiod = startperiod ? startperiod :
-                date.getDate() + "." + Number(date.getMonth()) + "." + date.getFullYear();
-            endperiod = endperiod ? endperiod :
-                date.getDate() + "." + Number(date.getMonth() + 1) + "." + date.getFullYear();
+            let { startid, count } = request;
+            startid = startid?startid:1
+            count = count?count:200
 
-            const redis_key = 'methods:4;' + startperiod + ":" + endperiod;
+            const redis_key = 'methods:4;' + startid + ":" + count;
             let res = await Redis.get(redis_key);
             res = JSON.parse(res);
             if(!res) {
@@ -36,7 +33,7 @@ export default new Service({
                     agents: []
                 };
                 const fakerator = Fakerator();
-                for (let i = 1; i < 11; i++) {
+                for (let i = startid; i < count; i++) {
                     res.agents.push({
                         id: i,
                         name: fakerator.company.name()

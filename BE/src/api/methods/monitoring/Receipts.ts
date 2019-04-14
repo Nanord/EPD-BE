@@ -12,14 +12,15 @@ export default new Service({
         try {
             const user = await checkUser(request.session);
 
-            let { startperiod, endperiod } = request;
-            let date = new Date();
-            startperiod = startperiod ? startperiod :
-                date.getDate() + "." + Number(date.getMonth() + 1) + "." + date.getFullYear();
-            endperiod = endperiod ? endperiod :
-                date.getDate() + "." + Number(date.getMonth() + 1) + "." + date.getFullYear();
+            let { id, startid, count } = request;
+            startid = startid?startid:1
+            count = count?count:200
 
-            const redis_key = 'methods:7;' + startperiod + ":" + endperiod;
+            let date = new Date();
+            let startperiod = date.getDate() + "." + Number(date.getMonth() + 1) + "." + date.getFullYear();
+            let endperiod = date.getDate() + "." + Number(date.getMonth() + 1) + "." + date.getFullYear();
+
+            const redis_key = 'methods:7;' + startid + ":" + count;
             let res = await Redis.get(redis_key);
             res = JSON.parse(res);
             if(!res) {
@@ -33,13 +34,13 @@ export default new Service({
                 );*/
                 res = {
                     reqtype: 7,
-                    listtotal: 10,
-                    listpartid: 1,
-                    listcount: 11,
+                    listtotal: count,
+                    listpartid: startid,
+                    listcount: count,
                     invoices: []
                 };
                 const fakerator = Fakerator();
-                for (let i = 1; i < 11; i++) {
+                for (let i = startid; i < count; i++) {
                     res.invoices.push({
                         invid: i,
                         els: fakerator.random.number(100, 10000),

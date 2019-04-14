@@ -13,7 +13,10 @@ export default new Service({
             const user = await checkUser(request.session);
 
 
-            let { startperiod, endperiod } = request;
+            let { startid, count, startperiod, endperiod } = request;
+            startid = startid?startid:1
+            count = count?count:200
+
             let date = new Date();
             startperiod = startperiod ? startperiod :
                 date.getDate() + "." + Number(date.getMonth()) + "." + date.getFullYear();
@@ -39,7 +42,7 @@ export default new Service({
                     invoices: []
                 };
                 const fakerator = Fakerator();
-                for (let i = 1; i < 11; i++) {
+                for (let i = startid; i < count; i++) {
                     res.invoices.push({
                         invid: i,
                         els: fakerator.random.number(100, 10000),

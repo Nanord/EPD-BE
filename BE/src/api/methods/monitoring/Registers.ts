@@ -12,9 +12,13 @@ export default new Service({
         try {
             const user = await checkUser(request.session);
         
+            let { startid, count, startperiod, endperiod } = request;
+            startid = startid?startid:1
+            count = count?count:200
+
             let date = new Date();
-            let startperiod = date.getDate() + "." + Number(date.getMonth() + 1) + "." + date.getFullYear();
-            let endperiod = date.getDate() + "." + Number(date.getMonth() + 1) + "." + date.getFullYear();
+            startperiod = date.getDate() + "." + Number(date.getMonth() + 1) + "." + date.getFullYear();
+            endperiod = date.getDate() + "." + Number(date.getMonth() + 1) + "." + date.getFullYear();
 
             const redis_key = 'methods:6;' + startperiod + ":" + endperiod;
             let res = await Redis.get(redis_key);
@@ -31,12 +35,12 @@ export default new Service({
                 const fakerator = Fakerator();
                 res = {
                     reqtype: 6,
-                    listtotal: 10,
-                    listpartid: 1,
-                    listcount: 11,
+                    listtotal: count,
+                    listpartid: startid,
+                    listcount: count,
                     registries: []
                 };
-                for (let i = 1; i < 10; i++) {
+                for (let i = startid; i < count; i++) {
                     res.registries.push({
                         regid: i,
                         date: fakerator.random.number(1,31) + "." + fakerator.random.number(date.getMonth(),date.getMonth() + 1) + "." +  date.getFullYear()
