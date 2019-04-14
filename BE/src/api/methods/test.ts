@@ -21,11 +21,11 @@ export default new Service({
                 Redis.setex('methods:test', JSON.stringify(res));
             }
             res = JSON.stringify(res);
-            Logger.log("SERVICE: " + this.name + ": \n\t\t\tres:" + res);
+            Logger.log("METHOD: " + this.name + ": \n\t\t\tres:" + res);
             return SendSuccess(JSON.parse(res));
 
         } catch (error) {
-            Logger.error("SERVICE: " + this.name + ": " + error.message + " " + error.err);
+            Logger.error("METHOD: " + this.name + ": " + error.message + " " + error.err);
             return SendError(500, error.err);
         }
     }

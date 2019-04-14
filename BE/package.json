@@ -12,6 +12,7 @@
   "author": "Borisov Alexandr",
   "license": "ISC",
   "dependencies": {
+    "fakerator": "^0.3.0",
     "@types/compression": "^0.0.36",
     "@types/js-yaml": "^3.11.2",
     "@types/moment": "^2.13.0",

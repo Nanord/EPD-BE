@@ -79,6 +79,7 @@ app.post("/api/report/:method", (req, res) => {
    }
 
    ReportMethod.executor(req.body, (response: any) => res.status(200).send(response));
+
 });
 
 /**
