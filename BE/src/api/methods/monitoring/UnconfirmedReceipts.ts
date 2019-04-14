@@ -53,8 +53,8 @@ export default new Service({
                 }
                 Redis.setex(redis_key, JSON.stringify(res));
             }
-            res = JSON.stringify(res);
             Logger.log("METHOD: " + this.name + ":  res: invoices.length = " + res.invoices.length);
+            res = JSON.stringify(res);
             return SendSuccess(JSON.parse(res));``
 
         } catch (error) {
