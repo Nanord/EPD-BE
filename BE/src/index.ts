@@ -44,7 +44,7 @@ app.use(compression());
 app.post("/api/:method", (req, res) => {
     Logger.log("/api/" + req.params.method);
     res.set('Content-Type', 'application/json; charset=utf-8');
-    Logger.log("req: " + JSON.parse(req.body));
+    Logger.log("req: " + req.body);
     let result = { message: "Method not fond" };
     const Method = Methods[req.params.method.toLowerCase()] as Service;
     if (!Method) {
