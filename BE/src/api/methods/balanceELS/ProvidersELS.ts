@@ -3,6 +3,7 @@ import Logger from "../../../utils/logger/Logger";
 import Sod from "../../../utils/Sod";
 import Redis from "../../../utils/Redis";
 import Fakerator from 'fakerator';
+import DataTime from 'node-datetime';
 
 
 export default new Service({
@@ -18,11 +19,9 @@ export default new Service({
             startid = startid?startid:1;
             count = count?count:200
 
-            let date = new Date();
-            startperiod = startperiod ? startperiod :
-                date.getDate() + "." + Number(date.getMonth()) + "." + date.getFullYear();
-            endperiod = endperiod ? endperiod :
-                date.getDate() + "." + Number(date.getMonth() + 1) + "." + date.getFullYear();
+            var date = DataTime.create().format('d.m.Y'); ; 
+            startperiod = startperiod ? startperiod : date;
+            endperiod = endperiod ? endperiod : date;
 
             const redis_key = 'methods:8;' + els + ";" + startperiod + ":" + endperiod;
             let res = await Redis.get(redis_key);
@@ -50,9 +49,8 @@ export default new Service({
                 Redis.setex(redis_key, JSON.stringify(res));
             }
             res = JSON.stringify(res);
-            Logger.log("METHOD: " + this.name + ": \n\t\t\t\t\t res: " + res);
+            Logger.log("METHOD: " + this.name + ":  res: providers.length = " + res.providers.length);
             return SendSuccess(JSON.parse(res));
-
         } catch (error) {
             Logger.error("METHOD: " + this.name + ": " + error.message + " " + error.err);
             return SendError(100, error.err);

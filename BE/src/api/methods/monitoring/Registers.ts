@@ -6,7 +6,7 @@ import Fakerator from 'fakerator';
 
 
 export default new Service({
-    name: "PayingAgents",
+    name: "Registers",
     description: "3.Мониторинг принятых оплат 3.3 Запрос части списка реестров за период",
     on: async function (request, checkUser, SendSuccess, SendError) {
         try {

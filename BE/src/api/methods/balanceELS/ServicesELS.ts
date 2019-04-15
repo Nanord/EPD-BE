@@ -16,7 +16,7 @@ export default new Service({
             els = els?els:1;
             providerid = providerid?providerid:1;
             startid = startid?startid:1;
-            count = count?count:10;
+            count = count?count:200;
 
             let date = new Date();
             startperiod = startperiod ? startperiod :
@@ -56,7 +56,7 @@ export default new Service({
                 Redis.setex(redis_key, JSON.stringify(res));
             }
             res = JSON.stringify(res);
-            Logger.log("METHOD: " + this.name + ": \n\t\t\t\t\t res: " + res);
+            Logger.log("METHOD: " + ":  res: acts.length = " + res.acts.length);
             return SendSuccess(JSON.parse(res));
 
         } catch (error) {
