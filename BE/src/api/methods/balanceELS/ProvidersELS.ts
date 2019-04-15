@@ -17,15 +17,27 @@ export default new Service({
             let { els, startperiod, endperiod, startid, count } = request;
             els = els?els:1;
             startid = startid?startid:1;
-            count = count?count:200
+            count = count && count < 200?count:200;
 
-            var date = DataTime.create().format('d.m.Y'); ; 
-            startperiod = startperiod ? startperiod : date;
-            endperiod = endperiod ? endperiod : date;
+            // Формирование даты
+            var end_date = DataTime.create().format('d.m.Y');
+            var start_date = end_date.split(".");
+            if(Number.parseInt(start_date[1]) > 1) {
+                start_date[1] = "0" + (Number.parseInt(start_date[1])-1);
+            } else {
+                start_date[1] = "31";
+            }
+            start_date = start_date.join(".");
 
-            const redis_key = 'methods:8;' + els + ";" + startperiod + ":" + endperiod;
-            let res = await Redis.get(redis_key);
-            res = JSON.parse(res);
+            let res;
+            let redis_key;
+            if(!startperiod && !endperiod) {
+                endperiod = endperiod ? endperiod : end_date;
+                startperiod = startperiod ? startperiod : start_date;
+                redis_key = 'methods:8;' + els + ";" + startperiod + ":" + endperiod;
+                res = await Redis.get(redis_key);
+                res = JSON.parse(res);
+            }
             if(!res) {
                 /*res = await Sod.performQuery(
                     "123",
@@ -46,11 +58,12 @@ export default new Service({
                         name: fakerator.company.name(),
                     });
                 }
-                Redis.setex(redis_key, JSON.stringify(res));
+                if(redis_key) {
+                    Redis.setex(redis_key, JSON.stringify(res));
+                }
             }
-            res = JSON.stringify(res);
             Logger.log("METHOD: " + this.name + ":  res: providers.length = " + res.providers.length);
-            return SendSuccess(JSON.parse(res));
+            return SendSuccess(res);
         } catch (error) {
             Logger.error("METHOD: " + this.name + ": " + error.message + " " + error.err);
             return SendError(100, error.err);

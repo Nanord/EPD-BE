@@ -3,10 +3,11 @@ import Logger from "../../../utils/logger/Logger";
 import Sod from "../../../utils/Sod";
 import Redis from "../../../utils/Redis";
 import Fakerator from 'fakerator';
+import DataTime from 'node-datetime';
 
 
 export default new Service({
-    name: "ProviderListAcceptedPayments",
+    name: "ProvidersAcceptedPayments",
     description: "2.Получение отчета по принятым оплатам: 2.1. Список поставщиков услуг, привязанных к Получателю ДС",
     on: async function (request, checkUser, SendSuccess, SendError) {
         try {
@@ -14,8 +15,8 @@ export default new Service({
 
             let { acceptorid, startid, count } = request;
             acceptorid = acceptorid?acceptorid:1;
-            startid = startid?startid:0;
-            count = count?count:10;
+            startid = startid?startid:1;
+            count = count && count < 200?count:200;
 
             const redis_key = 'methods:3;' + acceptorid + ";" + startid + ";" + count;
             let res = await Redis.get(redis_key);
@@ -47,9 +48,11 @@ export default new Service({
                 }
                 Redis.setex(redis_key, JSON.stringify(res));
             }
-            res = JSON.stringify(res);
+            if(redis_key) {
+                Redis.setex(redis_key, JSON.stringify(res));
+            }
             Logger.log("METHOD: " + this.name + ":  res: providers.length = " + res.providers.length);
-            return SendSuccess(JSON.parse(res));
+            return SendSuccess(res);
 
         } catch (error) {
             Logger.error("METHOD: " + this.name + ": " + error.message + " " + error.err);

@@ -3,22 +3,32 @@ import Logger from "../../../utils/logger/Logger";
 import Sod from "../../../utils/Sod";
 import Redis from "../../../utils/Redis";
 import Fakerator from 'fakerator';
+import DataTime from 'node-datetime';
 
 
 export default new Service({
-    name: "Receipt",
+    name: "Receipts",
     description: "3.Мониторинг принятых оплат 3.4 Запрос части списка квитанций, привязанных к реестру",
     on: async function (request, checkUser, SendSuccess, SendError) {
         try {
             const user = await checkUser(request.session);
 
             let { id, startid, count } = request;
-            startid = startid?startid:1
-            count = count?count:200
+            startid = startid?startid:1;
+            count = count && count < 200?count:200;
 
-            let date = new Date();
-            let startperiod = date.getDate() + "." + Number(date.getMonth() + 1) + "." + date.getFullYear();
-            let endperiod = date.getDate() + "." + Number(date.getMonth() + 1) + "." + date.getFullYear();
+            // Формирование даты
+            var end_date = DataTime.create().format('d.m.Y');
+            var start_date = end_date.split(".");
+            if(Number.parseInt(start_date[1]) > 1) {
+                start_date[1] = "0" + (Number.parseInt(start_date[1])-1);
+            } else {
+                start_date[1] = "31";
+            }
+            start_date = start_date.join(".");
+
+            let startperiod = start_date;
+            let endperiod = end_date;
 
             const redis_key = 'methods:7;' + startid + ":" + count;
             let res = await Redis.get(redis_key);
@@ -45,14 +55,20 @@ export default new Service({
                         invid: i,
                         els: fakerator.random.number(100, 10000),
                         summ: fakerator.random.number(100, 10000),
-                        date: fakerator.random.number(1,31) + "." + fakerator.random.number(date.getMonth(),date.getMonth() + 1) + "." + date.getFullYear()
+                        date:
+                            fakerator.random.number(1,31) +
+                            "." +
+                            fakerator.random.number(Number.parseInt(start_date.split(".")[1]), Number.parseInt(end_date.split(".")[1])) +
+                            "." +
+                            start_date.split(".")[2]
                     });
                 }
-                Redis.setex(redis_key, JSON.stringify(res));
+                if(redis_key) {
+                    Redis.setex(redis_key, JSON.stringify(res));
+                }
             }
             Logger.log("METHOD: " + this.name + ":  res: invoices.length = " + res.invoices.length);
-            res = JSON.stringify(res);
-            return SendSuccess(JSON.parse(res));
+            return SendSuccess(res);
 
         } catch (error) {
             Logger.error("METHOD: " + this.name + ": " + error.message + " " + error.err);

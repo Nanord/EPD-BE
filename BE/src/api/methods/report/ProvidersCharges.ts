@@ -3,20 +3,22 @@ import Logger from "../../../utils/logger/Logger";
 import Sod from "../../../utils/Sod";
 import Redis from "../../../utils/Redis";
 import Fakerator from 'fakerator';
+import DataTime from 'node-datetime';
 
 
 export default new Service({
-    name: "ProviderListCharges",
+    name: "ProvidersCharges",
     description: "1.Получение отчета по начислениям: 1.2. Список поставщиков услуг, привязанных к Получателю ДС",
     on: async function (request, checkUser, SendSuccess, SendError) {
         try {
             const user = await checkUser(request.session);
 
-            let { acceptorid, listpartid, listcount } = request;
+            let { acceptorid, startid, count } = request;
             acceptorid = acceptorid?acceptorid:1;
-            listpartid = listpartid?listpartid:1;
-            listcount = listcount?listcount:10;
-            const redis_key = 'methods:2;' + acceptorid + ";" + listpartid + ";" + listcount;
+            startid = startid?startid:1;
+            count = count && count < 200?count:200;
+
+            const redis_key = 'methods:2;' + acceptorid + ";" + startid + ";" + count;
             let res = await Redis.get(redis_key);
             res = JSON.parse(res);
             if(!res) {
@@ -35,7 +37,7 @@ export default new Service({
                     providers: []
                 };
                 const fakerator = Fakerator();
-                for (let i = listpartid; i < listcount; i++) {
+                for (let i = startid; i < count; i++) {
                     res.providers.push({
                         id: i,
                         name: fakerator.company.name(),
@@ -45,9 +47,11 @@ export default new Service({
                 }
                 Redis.setex(redis_key, JSON.stringify(res));
             }
-            res = JSON.stringify(res);
+            if(redis_key) {
+                Redis.setex(redis_key, JSON.stringify(res));
+            }
             Logger.log("METHOD: " + this.name + ":  res: providers.length = " + res.providers.length);
-            return SendSuccess(JSON.parse(res));
+            return SendSuccess(res);
 
         } catch (error) {
             Logger.error("METHOD: " + this.name + ": " + error.message + " " + error.err);

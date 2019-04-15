@@ -3,6 +3,7 @@ import Logger from "../../../utils/logger/Logger";
 import Sod from "../../../utils/Sod";
 import Redis from "../../../utils/Redis";
 import Fakerator from 'fakerator';
+import DataTime from 'node-datetime';
 
 
 export default new Service({
@@ -14,18 +15,55 @@ export default new Service({
 
 
             let { startid, count, startperiod, endperiod } = request;
-            startid = startid?startid:1
-            count = count?count:200
+            startid = startid?startid:1;
+            count = count && count < 200?count:200;
 
-            let date = new Date();
-            startperiod = startperiod ? startperiod :
-                date.getDate() + "." + Number(date.getMonth()) + "." + date.getFullYear();
-            endperiod = endperiod ? endperiod :
-                date.getDate() + "." + Number(date.getMonth() + 1) + "." + date.getFullYear();
+            // Формирование даты
+            var end_date = DataTime.create().format('d.m.Y');
+            var start_date = end_date.split(".");
+            if(Number.parseInt(start_date[1]) > 1) {
+                start_date[1] = "0" + (Number.parseInt(start_date[1])-1);
+            } else {
+                start_date[1] = "31";
+            }
+            start_date = start_date.join(".");
 
-            const redis_key = 'methods:5;' + startperiod + ":" + endperiod;
-            let res = await Redis.get(redis_key);
-            res = JSON.parse(res);
+            let res;
+            let redis_key;
+            if(!startperiod && !endperiod) {
+                endperiod = endperiod ? endperiod : end_date;
+                startperiod = startperiod ? startperiod : start_date;
+                redis_key = 'methods:5;' + startperiod + ":" + endperiod;
+                res = await Redis.get(redis_key);
+                res = JSON.parse(res);
+            }
+            else if(
+                startperiod.split(".")[2] == start_date.split(".")[2] &&
+                Number.parseInt(startperiod.split(".")[1]) >= Number.parseInt(start_date.split(".")[1]) &&
+                Number.parseInt(startperiod.split(".")[0]) >= Number.parseInt(start_date.split(".")[0]) &&
+                endperiod.split(".")[2] == end_date.split(".")[2] &&
+                Number.parseInt(endperiod.split(".")[1]) <= Number.parseInt(end_date.split(".")[1]) &&
+                Number.parseInt(endperiod.split(".")[0]) <= Number.parseInt(end_date.split(".")[0])
+            ) {
+                redis_key = 'methods:5;' + startperiod + ":" + endperiod;
+                res = await Redis.get(redis_key);
+                res = JSON.parse(res);
+                if(res) {
+                    res.invoices = res.invoices.filter(x => {
+                        const sp = startperiod.split(".");
+                        const xd = x.date.split(".");
+                        if (
+                            Number.parseInt(sp[1]) >= Number.parseInt(xd[1]) &&
+                            Number.parseInt(sp[0]) >= Number.parseInt(xd[0]) &&
+                            Number.parseInt(sp[1]) <= Number.parseInt(xd[1]) &&
+                            Number.parseInt(sp[0]) <= Number.parseInt(xd[0])
+                        ) {
+                            return x
+                        }
+                    })
+                }
+
+            }
             if(!res) {
                 /*res = await Sod.performQuery(
                     "123",
@@ -47,14 +85,20 @@ export default new Service({
                         invid: i,
                         els: fakerator.random.number(100, 10000),
                         summ: fakerator.random.number(100, 10000),
-                        date: fakerator.random.number(1,31) + "." + fakerator.random.number(date.getMonth(),date.getMonth() + 1) + "." + date.getFullYear()
+                        date:
+                            fakerator.random.number(1,31) +
+                            "." +
+                            fakerator.random.number(Number.parseInt(start_date.split(".")[1]), Number.parseInt(end_date.split(".")[1])) +
+                            "." +
+                            start_date.split(".")[2]
                     });
                 }
-                Redis.setex(redis_key, JSON.stringify(res));
+                if(redis_key) {
+                    Redis.setex(redis_key, JSON.stringify(res));
+                }
             }
             Logger.log("METHOD: " + this.name + ":  res: invoices.length = " + res.invoices.length);
-            res = JSON.stringify(res);
-            return SendSuccess(JSON.parse(res));``
+            return SendSuccess(res);
 
         } catch (error) {
             Logger.error("METHOD: " + this.name + ": " + error.message + " " + error.err);

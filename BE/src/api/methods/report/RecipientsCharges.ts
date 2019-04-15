@@ -4,6 +4,7 @@ import User from "../../../utils/User";
 import Sod from "../../../utils/Sod";
 import Redis from "../../../utils/Redis";
 import Fakerator from 'fakerator';
+import DataTime from 'node-datetime';
 
 
 export default new Service({
@@ -13,16 +14,29 @@ export default new Service({
         try {
             const user = await checkUser(request.session);
 
-            let { startperiod, endperiod } = request;
-            let date = new Date();
-            startperiod = startperiod ? startperiod :
-                date.getDate() + "." + Number(date.getMonth()) + "." + date.getFullYear();
-            endperiod = endperiod  ? endperiod :
-                date.getDate() + "." + Number(date.getMonth() + 1) + "." + date.getFullYear();
+            let { startperiod, endperiod, startid, count } = request;
+            startid = startid?startid:1;
+            count = count && count < 200?count:200;
 
-            const redis_key = 'methods:1;' + startperiod + ":" + endperiod;
-            let res = await Redis.get(redis_key);
-            res = JSON.parse(res);
+            // Формирование даты
+            var end_date = DataTime.create().format('d.m.Y');
+            var start_date = end_date.split(".");
+            if(Number.parseInt(start_date[1]) > 1) {
+                start_date[1] = "0" + (Number.parseInt(start_date[1])-1);
+            } else {
+                start_date[1] = "31";
+            }
+            start_date = start_date.join(".");
+
+            let res;
+            let redis_key;
+            if(!startperiod && !endperiod) {
+                endperiod = endperiod ? endperiod : end_date;
+                startperiod = startperiod ? startperiod : start_date;
+                redis_key = 'methods:1;' + startperiod + ":" + endperiod;
+                res = await Redis.get(redis_key);
+                res = JSON.parse(res);
+            }
             if(!res) {
                 /*res = await Sod.performQuery(
                     "123",
@@ -37,7 +51,7 @@ export default new Service({
                     reqtype: 1,
                     accessors: []
                 };
-                for (let i = 1; i < 11; i++) {
+                for (let i = startid; i < count; i++) {
                     res.accessors.push({
                         id: i,
                         acceptor: fakerator.names.name(),
@@ -46,11 +60,13 @@ export default new Service({
                         count: fakerator.random.number(10, 100)
                     });
                 }
-                Redis.setex(redis_key, JSON.stringify(res));
+                if(redis_key) {
+                    Redis.setex(redis_key, JSON.stringify(res));
+                }
             }
-            res = JSON.stringify(res);
+
             Logger.log("METHOD: " + this.name + ":  res: accessors.length = " + res.accessors.length);
-            return SendSuccess(JSON.parse(res));
+            return SendSuccess(res);
 
         } catch (error) {
             Logger.error("METHOD: " + this.name + ": " + error.message + " " + error.err);

@@ -3,6 +3,7 @@ import Logger from "../../../utils/logger/Logger";
 import Sod from "../../../utils/Sod";
 import Redis from "../../../utils/Redis";
 import Fakerator from 'fakerator';
+import DataTime from 'node-datetime';
 
 
 export default new Service({
@@ -13,8 +14,8 @@ export default new Service({
             const user = await checkUser(request.session);
 
             let { startid, count } = request;
-            startid = startid?startid:1
-            count = count?count:200
+            startid = startid?startid:1;
+            count = count && count < 200?count:200;
 
             const redis_key = 'methods:4;' + startid + ":" + count;
             let res = await Redis.get(redis_key);
@@ -39,12 +40,13 @@ export default new Service({
                         name: fakerator.company.name()
                     });
                 }
-                Redis.setex(redis_key, JSON.stringify(res));
+                if(redis_key) {
+                    Redis.setex(redis_key, JSON.stringify(res));
+                }
             }
             
             Logger.log("METHOD: " + this.name + ":  res: agents.length = " + res.agents.length);
-            res = JSON.stringify(res);
-            return SendSuccess(JSON.parse(res));
+            return SendSuccess(res);
 
         } catch (error) {
             Logger.error("METHOD: " + this.name + ": " + error.message + " " + error.err);
