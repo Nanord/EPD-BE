@@ -46,7 +46,6 @@ export default new Service({
                     res.invoices.push({
                         invid: i,
                         els: fakerator.random.number(100, 10000),
-                        provсount: fakerator.random.number(1, 10),
                         summ: fakerator.random.number(100, 10000),
                         date: fakerator.random.number(1,31) + "." + fakerator.random.number(date.getMonth(),date.getMonth() + 1) + "." + date.getFullYear()
                     });

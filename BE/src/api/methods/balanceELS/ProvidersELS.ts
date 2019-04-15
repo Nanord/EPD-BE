@@ -6,15 +6,18 @@ import Fakerator from 'fakerator';
 
 
 export default new Service({
-    name: "PayingAgents",
+    name: "ProvidersELS",
     description: "4.Получение баланса по ЕЛС 4.1 Запрос списка поставщиков услуг",
     on: async function (request, checkUser, SendSuccess, SendError) {
         try {
             const user = await checkUser(request.session);
 
 
-            let { els, startperiod, endperiod } = request;
+            let { els, startperiod, endperiod, startid, count } = request;
             els = els?els:1;
+            startid = startid?startid:1;
+            count = count?count:200
+
             let date = new Date();
             startperiod = startperiod ? startperiod :
                 date.getDate() + "." + Number(date.getMonth()) + "." + date.getFullYear();
@@ -38,7 +41,7 @@ export default new Service({
                     reqtype: 8,
                     providers: []
                 };
-                for (let i = 1; i < 11; i++) {
+                for (let i = startid; i < count; i++) {
                     res.providers.push({
                         id: i,
                         name: fakerator.company.name(),

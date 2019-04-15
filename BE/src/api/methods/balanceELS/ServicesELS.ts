@@ -6,19 +6,25 @@ import Fakerator from 'fakerator';
 
 
 export default new Service({
-    name: "PayingAgents",
+    name: "ServicesELS",
     description: "4.Получение баланса по ЕЛС 4.2 Запрос списка услуг по поставщику для заданного ЕЛС",
     on: async function (request, checkUser, SendSuccess, SendError) {
         try {
             const user = await checkUser(request.session);
 
-            let { els, providerid, listpartid, listcount } = request;
+            let { els, providerid, startid, count, startperiod, endperiod } = request;
             els = els?els:1;
             providerid = providerid?providerid:1;
-            listpartid = listpartid?listpartid:1;
-            listcount = listcount?listcount:10;
+            startid = startid?startid:1;
+            count = count?count:10;
 
-            const redis_key = 'methods:9;' + providerid + ";" + listpartid + ":" + listcount;
+            let date = new Date();
+            startperiod = startperiod ? startperiod :
+                date.getDate() + "." + Number(date.getMonth()) + "." + date.getFullYear();
+            endperiod = endperiod ? endperiod :
+                date.getDate() + "." + Number(date.getMonth() + 1) + "." + date.getFullYear();
+
+            const redis_key = 'methods:9;' + providerid + ";" + startid + ":" + count;
             let res = await Redis.get(redis_key);
             res = JSON.parse(res);
             if(!res) {
@@ -28,7 +34,7 @@ export default new Service({
                          reqtype: type || null,
                          els: els || null,
                          providerid: providerid || null,
-                         listpartid: listpartidv || null,
+                         startid: listpartidv || null,
                          listcount: listcount || null
                     }
                 );*/
@@ -39,11 +45,11 @@ export default new Service({
                     acceptorid: fakerator.random.number(0,10),
                     acts: []
                 };
-                for (let i = listpartid; i < listcount; i++) {
+                for (let i = startid; i < count; i++) {
                     res.acts.push({
                         id: i,
                         name: fakerator.company.name(),
-                        assumed: fakerator.random.number(1, 100),
+                        assumed: 300000,
                         payed: 0
                     });
                 }
