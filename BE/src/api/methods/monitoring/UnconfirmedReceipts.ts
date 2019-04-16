@@ -62,7 +62,6 @@ export default new Service({
                         }
                     })
                 }
-
             }
             if(!res) {
                 /*res = await Sod.performQuery(

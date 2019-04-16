@@ -77,6 +77,7 @@ export default new Service({
                     listtotal: count,
                     listpartid: startid,
                     listcount: count,
+                    count: count, 
                     registries: []
                 };
                 for (let i = startid; i < count; i++) {
