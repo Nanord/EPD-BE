@@ -32,7 +32,7 @@ export default new Service({
                     }
                 );*/
                 res = {
-                    reqtype: 2,
+                    reqtype: 3,
                     acceptorid: request.acceptorid,
                     providers: []
                 };

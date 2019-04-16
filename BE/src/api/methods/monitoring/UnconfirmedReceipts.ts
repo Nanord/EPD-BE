@@ -14,7 +14,8 @@ export default new Service({
             const user = await checkUser(request.session);
 
 
-            let { startid, count, startperiod, endperiod } = request;
+            let { id, startid, count, startperiod, endperiod } = request;
+            id = id?id:1;
             startid = startid?startid:1;
             count = count && count < 200?count:200;
 

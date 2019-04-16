@@ -13,9 +13,9 @@ export default new Service({
         try {
             const user = await checkUser(request.session);
         
-            let { startid, count, startperiod, endperiod } = request;
+            let { id, startid, count, startperiod, endperiod } = request;
+            id = id?id:1;
             startid = startid?startid:1;
-            count = count && count < 200?count:200;
 
             // Формирование даты
             var end_date = DataTime.create().format('d.m.Y');
@@ -26,6 +26,11 @@ export default new Service({
                 start_date[1] = "31";
             }
             start_date = start_date.join(".");
+
+            //Для тестового вывода
+            var c = Number.parseInt(end_date.split(".")[0])-Number.parseInt(end_date.split(".")[0])
+            c = c>=1?c:1;
+            count = count && count < 200?count:c;
 
             let res;
             let redis_key;
