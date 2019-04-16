@@ -83,12 +83,18 @@ export default new Service({
                 for (let i = startid; i < count; i++) {
                     res.registries.push({
                         regid: i,
-                        date:
+                        startDate:
                             fakerator.random.number(1,31) +
                             "." +
-                            fakerator.random.number(Number.parseInt(start_date.split(".")[1]), Number.parseInt(end_date.split(".")[1])) +
+                            Number.parseInt(start_date.split(".")[1]) +
                             "." +
-                            start_date.split(".")[2]
+                            start_date.split(".")[2],
+                        endDate : 
+                            fakerator.random.number(1,31) +
+                            "." +
+                            Number.parseInt(end_date.split(".")[1]) +
+                            "." +
+                            start_date.split(".")[2],
                     });
                 }
                 if(redis_key) {
