@@ -13,7 +13,7 @@ export default new Service({
         try {
             const user = await checkUser(request.session);
 
-            let { id, startid, count } = request;
+            let { id, startid, count, startperiod, endperiod } = request;
             startid = startid?startid:1;
             count = count && count < 200?count:200;
 
@@ -26,13 +26,41 @@ export default new Service({
                 start_date[1] = "31";
             }
             start_date = start_date.join(".");
-
-            let startperiod = start_date;
-            let endperiod = end_date;
-
-            const redis_key = 'methods:7;' + startid + ":" + count;
-            let res = await Redis.get(redis_key);
-            res = JSON.parse(res);
+            let res;
+            let redis_key;
+            if(!startperiod && !endperiod) {
+                endperiod = endperiod ? endperiod : end_date;
+                startperiod = startperiod ? startperiod : start_date;
+                redis_key = 'methods:7;' + startperiod + ":" + endperiod;
+                res = await Redis.get(redis_key);
+                res = JSON.parse(res);
+            }
+            else if(
+                startperiod.split(".")[2] == start_date.split(".")[2] &&
+                Number.parseInt(startperiod.split(".")[1]) >= Number.parseInt(start_date.split(".")[1]) &&
+                Number.parseInt(startperiod.split(".")[0]) >= Number.parseInt(start_date.split(".")[0]) &&
+                endperiod.split(".")[2] == end_date.split(".")[2] &&
+                Number.parseInt(endperiod.split(".")[1]) <= Number.parseInt(end_date.split(".")[1]) &&
+                Number.parseInt(endperiod.split(".")[0]) <= Number.parseInt(end_date.split(".")[0])
+            ) {
+                redis_key = 'methods:7;' + startperiod + ":" + endperiod;
+                res = await Redis.get(redis_key);
+                res = JSON.parse(res);
+                if(res) {
+                    res.invoices = res.invoices.filter(x => {
+                        const sp = startperiod.split(".");
+                        const xd = x.date.split(".");
+                        if (
+                            Number.parseInt(sp[1]) >= Number.parseInt(xd[1]) &&
+                            Number.parseInt(sp[0]) >= Number.parseInt(xd[0]) &&
+                            Number.parseInt(sp[1]) <= Number.parseInt(xd[1]) &&
+                            Number.parseInt(sp[0]) <= Number.parseInt(xd[0])
+                        ) {
+                            return x
+                        }
+                    })
+                }
+            }
             if(!res) {
                 /*res = await Sod.performQuery(
                     "123",
