@@ -49,7 +49,7 @@ export default new Service({
             if(redis_key) {
                 Redis.setex(redis_key, JSON.stringify(res));
             }
-            Logger.log("METHOD: " + this.name + ":  res: providers.length = " + res.providers.length);
+            Logger.log("METHOD: " + this.name + ":  res: providers.length = " + res.services.length);
             return SendSuccess(res);
 
         } catch (error) {
