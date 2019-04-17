@@ -28,9 +28,10 @@ export default new Service({
             start_date = start_date.join(".");
 
             //Для тестового вывода
-            var c = Number.parseInt(end_date.split(".")[0])-Number.parseInt(end_date.split(".")[0])
-            c = c>=1?c:1;
-            count = count && count < 200?count:c;
+            var m = Number.parseInt(end_date.split(".")[1])-Number.parseInt(start_date.split(".")[1])
+            let d = Number.parseInt(end_date.split(".")[0])-Number.parseInt(start_date.split(".")[0]) + m > 0?m*30:0
+            count = d>1?d:2;
+            Logger.log("FUCK" + count);
 
             let res;
             let redis_key;
