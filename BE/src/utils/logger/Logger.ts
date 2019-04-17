@@ -8,6 +8,7 @@ enum LogTypes {
 class Logger{
 
     //private static format: string = 'YYYY-MM-DD HH:mm:ss.SSS';
+    private static userIP:string = "empty";
     private static instance: Logger;
 
     static getInstance(): Logger {
@@ -15,6 +16,9 @@ class Logger{
             Logger.instance = new Logger();
         }
         return Logger.instance;
+    }
+    public static setUserIP(userIP) {
+        this.userIP = userIP;
     }
 
     /*private timestamp(): string {
@@ -25,16 +29,16 @@ class Logger{
         switch (type) {
             case LogTypes.ERROR:
                 //console.error(`[${this.timestamp()}] ${message}`);
-                console.error(`${message}`);
+                console.error(`userIP: ${Logger.userIP} message: ${message}`);
                 break;
             case LogTypes.WARNING:
                 //console.warn(`[${this.timestamp()}] ${message}`);
-                console.warn(`[${message}`);
+                console.warn(`userIP: ${Logger.userIP} message: ${message}`);
                 break;
             case LogTypes.MESSAGE:
             default:
                 //console.log(`[${this.timestamp()}] ${message}`);
-                console.log(`${message}`);
+                console.log(`userIP: ${Logger.userIP} message: ${message}`);
         }
     }
 

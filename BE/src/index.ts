@@ -42,6 +42,7 @@ app.use(compression());
  * Внешний API
  */
 app.post("/api/:method", (req, res) => {
+    Logger.setUserIP(req.ip);
     Logger.log("/api/" + req.params.method);
     res.set('Content-Type', 'application/json; charset=utf-8');
     let result = { message: "Method not fond" };
