@@ -8,7 +8,7 @@ import DataTime from 'node-datetime';
 
 export default new Service({
     name: "ProvidersPayments",
-    description: "4.Получение отчета принятым и перечисленным оплатам: 4.3. Список поставщиков услуг, привязанных к Квитанциям",
+    description: "5.Получение отчета принятым и перечисленным оплатам: 5.3. Список поставщиков услуг, привязанных к Квитанциям",
     on: async function (request, checkUser, SendSuccess, SendError) {
         try {
             const user = await checkUser(request.session);
@@ -32,8 +32,9 @@ export default new Service({
                     }
                 );*/
                 res = {
-                    reqtype: 3,
+                    reqtype: 12,
                     acceptorid: request.acceptorid,
+                    listtotal: count,
                     providers: []
                 };
                 const fakerator = Fakerator();

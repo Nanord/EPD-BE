@@ -8,7 +8,7 @@ import DataTime from 'node-datetime';
 
 export default new Service({
     name: "ReceiptsPayments",
-    description: "4.Получение отчета принятым и перечисленным оплатам 4.2 Запрос списка квитанций привязанных к Платежным Агентам",
+    description: "5.Получение отчета принятым и перечисленным оплатам 5.2 Запрос списка квитанций привязанных к Платежным Агентам",
     on: async function (request, checkUser, SendSuccess, SendError) {
         try {
             const user = await checkUser(request.session);

@@ -8,7 +8,7 @@ import DataTime from 'node-datetime';
 
 export default new Service({
     name: "ServicePayments",
-    description: "4.Получение отчета принятым и перечисленным оплатам: 4.3. Список услуг, привязанных к Квитанциям",
+    description: "5.Получение отчета принятым и перечисленным оплатам: 5.4. Список услуг, привязанных к Квитанциям",
     on: async function (request, checkUser, SendSuccess, SendError) {
         try {
             const user = await checkUser(request.session);
@@ -34,11 +34,11 @@ export default new Service({
                 res = {
                     reqtype: 3,
                     acceptorid: request.acceptorid,
-                    providers: []
+                    services: []
                 };
                 const fakerator = Fakerator();
                 for (let i = startid; i < count; i++) {
-                    res.providers.push({
+                    res.services.push({
                         id: i,
                         name: fakerator.lorem.sentence(),
                         received: fakerator.random.number(100, 10000),

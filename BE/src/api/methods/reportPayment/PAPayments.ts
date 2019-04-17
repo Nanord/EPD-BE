@@ -8,7 +8,7 @@ import DataTime from 'node-datetime';
 
 export default new Service({
     name: "PAPayments",
-    description: "4.Получение отчета принятым и перечисленным оплатам 4.1 Запрос списка платежных агентов",
+    description: "5.Получение отчета принятым и перечисленным оплатам 5.1 Запрос списка платежных агентов",
     on: async function (request, checkUser, SendSuccess, SendError) {
         try {
             let { startid, count, startperiod, endperiod } = request;
