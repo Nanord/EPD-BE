@@ -15,7 +15,7 @@ export default new Service({
 
             let { startid, count } = request;
             startid = startid?startid:1;
-            count = count && count < 200?count:200;
+            count = count && count < 150?count:150;
 
             const redis_key = 'methods:4;' + startid + ":" + count;
             let res = await Redis.get(redis_key);

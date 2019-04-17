@@ -17,7 +17,7 @@ export default new Service({
             let { els, startperiod, endperiod, startid, count } = request;
             els = els?els:1;
             startid = startid?startid:1;
-            count = count && count < 200?count:200;
+            count = count && count < 150?count:150;
 
             // Формирование даты
             var end_date = DataTime.create().format('d.m.Y');

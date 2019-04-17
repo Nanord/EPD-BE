@@ -86,7 +86,7 @@ export default new Service({
                 for (let i = startid; i < count; i++) {
                     res.registries.push({
                         regid: i,
-                        countPayments: 200,
+                        countPayments: 150,
                         startDate:
                             fakerator.random.number(1,31) +
                             "." +
