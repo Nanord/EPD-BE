@@ -15,4 +15,4 @@ WORKDIR /app
 RUN yarn global add pm2
 RUN cd /app && yarn install
 
-CMD ["yarn", "start_pm2_docker"]
+CMD ["yarn", "start_pm2_docker_prod"]
