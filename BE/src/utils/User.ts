@@ -7,11 +7,11 @@ namespace User {
 
     export async function check(session: string) {
         Logger.log("ACCESS: " + "check user: " + session);
-        if (!session && typeof session === 'undefined') {
-            let msg = "Incorrect Session";
-            Logger.warning("ACCESS: " + msg);
-            throw new Error(msg);
-        }
+        // if (!session && typeof session === 'undefined') {
+        //     let msg = "Incorrect Session";
+        //     Logger.warning("ACCESS: " + msg);
+        //     throw new Error(msg);
+        // }
         
         if (process.env.SMORODINA_EPD_FAKEID === "true") {
             Logger.log("ACCESS: " + "Debug session");
