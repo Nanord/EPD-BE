@@ -7,15 +7,16 @@ import DataTime from 'node-datetime';
 
 
 export default new Service({
-    name: "Registers",
-    description: "3.Мониторинг принятых оплат 3.3 Запрос части списка реестров за период",
+    name: "ReceiptsPayments",
+    description: "4.Получение отчета принятым и перечисленным оплатам 4.2 Запрос списка квитанций привязанных к Платежным Агентам",
     on: async function (request, checkUser, SendSuccess, SendError) {
         try {
             const user = await checkUser(request.session);
-        
+
             let { id, startid, count, startperiod, endperiod } = request;
             id = id?id:1;
             startid = startid?startid:1;
+            count = count && count < 200?count:200;
 
             // Формирование даты
             var end_date = DataTime.create().format('d.m.Y');
@@ -26,18 +27,12 @@ export default new Service({
                 start_date[1] = "31";
             }
             start_date = start_date.join(".");
-
-            //Для тестового вывода
-            var c = Number.parseInt(end_date.split(".")[0])-Number.parseInt(end_date.split(".")[0])
-            c = c>=1?c:1;
-            count = count && count < 200?count:c;
-
             let res;
             let redis_key;
             if(!startperiod && !endperiod) {
                 endperiod = endperiod ? endperiod : end_date;
                 startperiod = startperiod ? startperiod : start_date;
-                redis_key = 'methods:6;' + startperiod + ":" + endperiod;
+                redis_key = 'methods:11;' + startperiod + ":" + endperiod;
                 res = await Redis.get(redis_key);
                 res = JSON.parse(res);
             }
@@ -49,11 +44,11 @@ export default new Service({
                 Number.parseInt(endperiod.split(".")[1]) <= Number.parseInt(end_date.split(".")[1]) &&
                 Number.parseInt(endperiod.split(".")[0]) <= Number.parseInt(end_date.split(".")[0])
             ) {
-                redis_key = 'methods:6;' + startperiod + ":" + endperiod;
+                redis_key = 'methods:11;' + startperiod + ":" + endperiod;
                 res = await Redis.get(redis_key);
                 res = JSON.parse(res);
                 if(res) {
-                    res.registries = res.registries.filter(x => {
+                    res.invoices = res.invoices.filter(x => {
                         const sp = startperiod.split(".");
                         const xd = x.date.split(".");
                         if (
@@ -76,35 +71,32 @@ export default new Service({
                          endperiod: endperiod || null
                     }
                 );*/
-                const fakerator = Fakerator();
                 res = {
-                    reqtype: 6,
+                    reqtype: 7,
                     listtotal: count,
-                    count: count, 
-                    registries: []
+                    invoices: []
                 };
+                const fakerator = Fakerator();
                 for (let i = startid; i < count; i++) {
-                    res.registries.push({
-                        regid: i,
-                        startDate:
+                    res.invoices.push({
+                        id: i,
+                        received: fakerator.random.number(100, 10000),
+                        listed: fakerator.random.number(0, 10000),
+                        idpp: fakerator.random.number(1111, 9999),
+                        regid: fakerator.random.number(1, 200),
+                        date:
                             fakerator.random.number(1,31) +
                             "." +
-                            Number.parseInt(start_date.split(".")[1]) +
+                            fakerator.random.number(Number.parseInt(start_date.split(".")[1]), Number.parseInt(end_date.split(".")[1])) +
                             "." +
-                            start_date.split(".")[2],
-                        endDate : 
-                            fakerator.random.number(1,31) +
-                            "." +
-                            Number.parseInt(end_date.split(".")[1]) +
-                            "." +
-                            start_date.split(".")[2],
+                            start_date.split(".")[2]
                     });
                 }
                 if(redis_key) {
                     Redis.setex(redis_key, JSON.stringify(res));
                 }
             }
-            Logger.log("METHOD: " + this.name + ":  res: registries.length = " + res.registries.length);
+            Logger.log("METHOD: " + this.name + ":  res: invoices.length = " + res.invoices.length);
             return SendSuccess(res);
 
         } catch (error) {

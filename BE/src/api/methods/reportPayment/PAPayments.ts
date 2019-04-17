@@ -7,15 +7,13 @@ import DataTime from 'node-datetime';
 
 
 export default new Service({
-    name: "Registers",
-    description: "3.Мониторинг принятых оплат 3.3 Запрос части списка реестров за период",
+    name: "PAPayments",
+    description: "4.Получение отчета принятым и перечисленным оплатам 4.1 Запрос списка платежных агентов",
     on: async function (request, checkUser, SendSuccess, SendError) {
         try {
-            const user = await checkUser(request.session);
-        
-            let { id, startid, count, startperiod, endperiod } = request;
-            id = id?id:1;
+            let { startid, count, startperiod, endperiod } = request;
             startid = startid?startid:1;
+            count = count && count < 200?count:200;
 
             // Формирование даты
             var end_date = DataTime.create().format('d.m.Y');
@@ -26,18 +24,12 @@ export default new Service({
                 start_date[1] = "31";
             }
             start_date = start_date.join(".");
-
-            //Для тестового вывода
-            var c = Number.parseInt(end_date.split(".")[0])-Number.parseInt(end_date.split(".")[0])
-            c = c>=1?c:1;
-            count = count && count < 200?count:c;
-
             let res;
             let redis_key;
             if(!startperiod && !endperiod) {
                 endperiod = endperiod ? endperiod : end_date;
                 startperiod = startperiod ? startperiod : start_date;
-                redis_key = 'methods:6;' + startperiod + ":" + endperiod;
+                redis_key = 'methods:10;' + startperiod + ":" + endperiod;
                 res = await Redis.get(redis_key);
                 res = JSON.parse(res);
             }
@@ -49,11 +41,11 @@ export default new Service({
                 Number.parseInt(endperiod.split(".")[1]) <= Number.parseInt(end_date.split(".")[1]) &&
                 Number.parseInt(endperiod.split(".")[0]) <= Number.parseInt(end_date.split(".")[0])
             ) {
-                redis_key = 'methods:6;' + startperiod + ":" + endperiod;
+                redis_key = 'methods:10;' + startperiod + ":" + endperiod;
                 res = await Redis.get(redis_key);
                 res = JSON.parse(res);
                 if(res) {
-                    res.registries = res.registries.filter(x => {
+                    res.agents = res.agents.filter(x => {
                         const sp = startperiod.split(".");
                         const xd = x.date.split(".");
                         if (
@@ -76,35 +68,27 @@ export default new Service({
                          endperiod: endperiod || null
                     }
                 );*/
-                const fakerator = Fakerator();
                 res = {
-                    reqtype: 6,
+                    reqtype: 10,
                     listtotal: count,
-                    count: count, 
-                    registries: []
+                    agents: []
                 };
+                const fakerator = Fakerator();
                 for (let i = startid; i < count; i++) {
-                    res.registries.push({
-                        regid: i,
-                        startDate:
-                            fakerator.random.number(1,31) +
-                            "." +
-                            Number.parseInt(start_date.split(".")[1]) +
-                            "." +
-                            start_date.split(".")[2],
-                        endDate : 
-                            fakerator.random.number(1,31) +
-                            "." +
-                            Number.parseInt(end_date.split(".")[1]) +
-                            "." +
-                            start_date.split(".")[2],
+                    res.agents.push({
+                        id: i,
+                        name: fakerator.company.name(),
+                        received: fakerator.random.number(100, 10000),
+                        listed: fakerator.random.number(0, 10000),
+
                     });
                 }
                 if(redis_key) {
                     Redis.setex(redis_key, JSON.stringify(res));
                 }
             }
-            Logger.log("METHOD: " + this.name + ":  res: registries.length = " + res.registries.length);
+
+            Logger.log("METHOD: " + this.name + ":  res: agents.length = " + res.agents.length);
             return SendSuccess(res);
 
         } catch (error) {
