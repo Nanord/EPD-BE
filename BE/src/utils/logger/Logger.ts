@@ -25,7 +25,7 @@ class Logger{
         return moment().format(Logger.format);
     }*/
 
-    private print(message: string, type: LogTypes): void {
+    private async print(message: string, type: LogTypes) {
         switch (type) {
             case LogTypes.ERROR:
                 //console.error(`[${this.timestamp()}] ${message}`);
@@ -42,23 +42,23 @@ class Logger{
         }
     }
 
-    static message(message: string): void {
+    static async message(message: string) {
         if(process.env.DEBUG === 'true') {
             Logger.getInstance().print(message, LogTypes.MESSAGE);
         }
     }
 
-    static log(message: string): void {
+    static async log(message: string) {
         if(process.env.DEBUG === 'true') {
             Logger.message(message);
         }
     }
 
-    static error(message: string): void {
+    static async error(message: string) {
         Logger.getInstance().print(message, LogTypes.ERROR);
     }
 
-    static warning(message: string): void {
+    static async warning(message: string) {
         if(process.env.DEBUG === 'true') {
             Logger.getInstance().print(message, LogTypes.WARNING);
         }

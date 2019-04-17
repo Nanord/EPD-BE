@@ -36,9 +36,9 @@ class Socket extends WS {
                     break;
                 case 'subscribe':
                     try {
-                        let name = "fuck you";
-                        let data = {fuck:"you"};
-                        connection.send(JSON.stringify({name, data}));
+                        // let name = "fuck you";
+                        // let data = {fuck:"you"};
+                        // connection.send(JSON.stringify({name, data}));
                     } catch (error) {
                         Logger.warning("SODKET: " + "Invalid subsctibe" + message + error)
                     }
