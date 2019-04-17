@@ -31,7 +31,6 @@ export default new Service({
             var m = Number.parseInt(end_date.split(".")[1])-Number.parseInt(start_date.split(".")[1])
             let d = Number.parseInt(end_date.split(".")[0])-Number.parseInt(start_date.split(".")[0]) + m > 0?m*30:0
             count = d>1?d:2;
-            Logger.log("FUCK" + count);
 
             let res;
             let redis_key;
