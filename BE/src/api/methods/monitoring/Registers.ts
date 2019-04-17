@@ -28,8 +28,8 @@ export default new Service({
             start_date = start_date.join(".");
 
             //Для тестового вывода
-            var m = Number.parseInt(end_date.split(".")[1])-Number.parseInt(start_date.split(".")[1])
-            let d = Number.parseInt(end_date.split(".")[0])-Number.parseInt(start_date.split(".")[0]) + m > 0?m*30:0
+            var m = Number.parseInt(end_date.split(".")[1])-Number.parseInt(start_date.split(".")[1]);
+            let d = Number.parseInt(end_date.split(".")[0])-Number.parseInt(start_date.split(".")[0]) + m > 0?m*30:0;
             count = d>1?d:2;
 
             let res;
@@ -86,6 +86,7 @@ export default new Service({
                 for (let i = startid; i < count; i++) {
                     res.registries.push({
                         regid: i,
+                        countPayments: 200,
                         startDate:
                             fakerator.random.number(1,31) +
                             "." +
