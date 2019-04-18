@@ -51,7 +51,7 @@ export default new Service({
                     reqtype: 1,
                     accessors: []
                 };
-                for (let i = startid; i < count; i++) {
+                for (let i = startid; i < count+1; i++) {
                     res.accessors.push({
                         id: i,
                         acceptor: fakerator.names.name(),

@@ -38,7 +38,7 @@ export default new Service({
                     providers: []
                 };
                 const fakerator = Fakerator();
-                for (let i = startid; i < count; i++) {
+                for (let i = startid; i < count+1; i++) {
                     res.providers.push({
                         id: i,
                         name: fakerator.company.name(),

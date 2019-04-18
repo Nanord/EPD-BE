@@ -77,7 +77,7 @@ export default new Service({
                     invoices: []
                 };
                 const fakerator = Fakerator();
-                for (let i = startid; i < count; i++) {
+                for (let i = startid; i < count+1; i++) {
                     res.invoices.push({
                         id: i,
                         received: fakerator.random.number(100, 10000),
@@ -87,7 +87,7 @@ export default new Service({
                         date:
                             fakerator.random.number(1,31) +
                             "." +
-                            fakerator.random.number(Number.parseInt(start_date.split(".")[1]), Number.parseInt(end_date.split(".")[1])) +
+                            fakerator.random.number(Number.parseInt(startperiod.split(".")[1]), Number.parseInt(endperiod.split(".")[1])) +
                             "." +
                             start_date.split(".")[2]
                     });

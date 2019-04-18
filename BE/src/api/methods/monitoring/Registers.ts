@@ -30,7 +30,7 @@ export default new Service({
             //Для тестового вывода
             var m = Number.parseInt(endperiod.split(".")[1])-Number.parseInt(startperiod.split(".")[1]);
             let d = ((Number.parseInt(endperiod.split(".")[0])-Number.parseInt(startperiod.split(".")[0])) +(m > 0?m*30:0));
-            count = d>1?d:1;
+            count = d>1?(d+1):2;
 
             let res;
             let redis_key;
@@ -79,8 +79,8 @@ export default new Service({
                 const fakerator = Fakerator();
                 res = {
                     reqtype: 6,
-                    listtotal: count,
-                    count: count, 
+                    listtotal: count-1,
+                    count: count-1,
                     registries: []
                 };
                 for (let i = startid; i < count; i++) {
@@ -90,13 +90,13 @@ export default new Service({
                         startDate:
                             fakerator.random.number(1,31) +
                             "." +
-                            Number.parseInt(start_date.split(".")[1]) +
+                            Number.parseInt(startperiod.split(".")[1]) +
                             "." +
                             start_date.split(".")[2],
                         endDate : 
                             fakerator.random.number(1,31) +
                             "." +
-                            Number.parseInt(end_date.split(".")[1]) +
+                            Number.parseInt(endperiod.split(".")[1]) +
                             "." +
                             start_date.split(".")[2],
                     });

@@ -52,7 +52,7 @@ export default new Service({
                     reqtype: 8,
                     providers: []
                 };
-                for (let i = startid; i < count; i++) {
+                for (let i = startid; i < count+1; i++) {
                     res.providers.push({
                         id: i,
                         name: fakerator.company.name(),

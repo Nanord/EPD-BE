@@ -56,7 +56,7 @@ export default new Service({
                     acceptorid: fakerator.random.number(0,10),
                     acts: []
                 };
-                for (let i = startid; i < count; i++) {
+                for (let i = startid; i < count+1; i++) {
                     res.acts.push({
                         id: i,
                         name: fakerator.company.name(),

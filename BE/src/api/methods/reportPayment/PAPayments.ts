@@ -74,7 +74,7 @@ export default new Service({
                     agents: []
                 };
                 const fakerator = Fakerator();
-                for (let i = startid; i < count; i++) {
+                for (let i = startid; i < count+1; i++) {
                     res.agents.push({
                         id: i,
                         name: fakerator.company.name(),
