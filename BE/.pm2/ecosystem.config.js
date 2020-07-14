@@ -24,15 +24,15 @@ module.exports = {
       SMORODINA_ALLOW_ORIGIN: string = "*",
 
       //BE config
-      SMORODINA_MOD_EPD_PORT: string = "7676",
+      SMORODINA_MOD_EPD_PORT: string = "",
       SMORODINA_MOD_EPD_FAKEID: string = "true",
 
       //BE sod config
-      SMORODINA_MOD_EPD_SOD_ENDPOINT: string = "http://172.16.200.193:8077/SOD",
+      SMORODINA_MOD_EPD_SOD_ENDPOINT: string = "",
 
       //BE Access config
-      SMORODINA_ACCESS_SERVER_HOST: string = "172.16.200.193",
-      SMORODINA_ACCESS_SERVER_PORT: string = "8050",
+      SMORODINA_ACCESS_SERVER_HOST: string = "",
+      SMORODINA_ACCESS_SERVER_PORT: string = "",
     },
     env_production: {
       NODE_ENV: 'production'
@@ -48,7 +48,7 @@ module.exports = {
  /* deploy : {
     production : {
       user : 'node',
-      host : '212.83.163.1',
+      host : '',
       ref  : 'origin/master',
       repo : 'git@github.com:repo.git',
       path : '/var/www/production',
